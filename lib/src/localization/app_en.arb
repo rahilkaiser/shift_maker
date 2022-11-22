@@ -1,0 +1,6 @@
+{
+  "appTitle": "shift_maker",
+  "@appTitle": {
+    "description": "The title of the application"
+  }
+}
