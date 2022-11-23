@@ -1,26 +1,26 @@
 import 'package:flutter/material.dart';
 
+import 'core_text_theme_constants.dart';
+
 class LightThemeConstants {
   LightThemeConstants._();
 
-  static Color get lightPrimaryColor => Colors.blueGrey.shade50;
-  static Color get lightPrimaryContainerColor => Colors.blueGrey.shade800;
-  static Color get lightOnPrimaryColor => Colors.blueGrey.shade200;
+  static Color get lightBackGroundColor => Colors.blueGrey.shade50;
+
+  static Color get lightAppBarColor => Colors.blueGrey.shade300;
+
+  static Color get lightPrimaryColor => Colors.blueGrey.shade300;
+
+  static Color get lightOnPrimaryColor => Colors.blueGrey.shade700;
+
+  static Color get lightPrimaryContainerColor => Colors.white54;
+
+  static Color get lightAccentColor => const Color.fromRGBO(74, 217, 217, 1);
+
   static Color get _lightTextColorPrimary => Colors.black;
-  static Color get lightAppBarColor => Colors.blue;
-
-  static TextStyle get _lightHeadingTextStyle => TextStyle(
-        color: _lightTextColorPrimary,
-        fontFamily: "Rubik",
-      );
-
-  static TextStyle get _lightBodyTextStyle => TextStyle(
-        color: _lightTextColorPrimary,
-        fontFamily: "Rubik",
-      );
 
   static TextTheme get lightTextTheme => TextTheme(
-        headline1: _lightHeadingTextStyle,
-        bodyText1: _lightBodyTextStyle,
+        headline1: CoreTextThemeConstants.getHeadingTextStyle(_lightTextColorPrimary),
+        bodyText1: CoreTextThemeConstants.getBodyTextStyle1(_lightTextColorPrimary),
       );
 }

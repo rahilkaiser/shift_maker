@@ -9,7 +9,7 @@ class AppTheme {
   static const _iconColor = Colors.white;
 
   static final ThemeData lightTheme = ThemeData(
-    scaffoldBackgroundColor: LightThemeConstants.lightPrimaryColor,
+    scaffoldBackgroundColor: LightThemeConstants.lightBackGroundColor,
     appBarTheme: AppBarTheme(
       color: LightThemeConstants.lightAppBarColor,
     ),
@@ -18,6 +18,7 @@ class AppTheme {
       primary: LightThemeConstants.lightPrimaryColor,
       onPrimary: LightThemeConstants.lightOnPrimaryColor,
       primaryContainer: LightThemeConstants.lightPrimaryContainerColor,
+      secondary: DarkThemeConstants.darkAccentColor,
     ),
   );
 

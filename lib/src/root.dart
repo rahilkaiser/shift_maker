@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
-import 'package:shift_maker/src/core/theme/theme.dart';
+import  'core/theme/theme.dart';
 
 import 'core/settings/settings_controller.dart';
 import 'view/auth/login/login_screen.dart';

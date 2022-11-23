@@ -27,19 +27,3 @@ class AppTitleComponent extends StatelessWidget {
     );
   }
 }
-
-
-// Future<List<TextSpan>> listOfEventsAtDay({String day, String monthNum}) async {
-//   final result = await DatabaseHelper.instance
-//       .queryForEventsAtDay(mnth: monthNum, dy: day);
-//   List<TextSpan> textSpans = [];
-//   int count = result.length;
-//   for (int i = 0; i < count; i++) {
-//     final String string = "-${result[i]['year']}: ${result[i]['title']}\n";
-//     textSpans.add(TextSpan(
-//       text: string,
-//     ));
-//   }
-//
-//   return textSpans;
-// }
