@@ -29,7 +29,7 @@ class RootWidget extends StatelessWidget {
             GlobalCupertinoLocalizations.delegate,
           ],
           supportedLocales: const [
-            Locale('en', ''),
+            Locale('en', ),
           ],
           onGenerateTitle: (BuildContext context) => AppLocalizations.of(context)!.appTitle,
           theme: AppTheme.lightTheme,

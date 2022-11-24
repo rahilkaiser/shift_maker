@@ -19,7 +19,7 @@ class RegisterFormComponent extends StatelessWidget {
       key: formKey,
       child: Column(
         children: [
-          const EmailInputFieldComponent(),
+          // const EmailInputFieldComponent(),
           CoreSpacingConstants.getCoreFormSpacingSizedBox(context),
           TextFormField(
             autovalidateMode: AutovalidateMode.disabled,

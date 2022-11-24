@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../application/auth/auth_bloc/auth_bloc.dart';
 import '../../../core/settings/settings_controller.dart';
 
+import '../../../injection.dart';
 import '../core_components/app-bar-title-component/app_bar_title_component.dart';
 import 'components/login_screen_body.dart';
 
@@ -36,6 +39,9 @@ class LoginScreen extends StatelessWidget {
             ),
           ],
         ),
-        body: const LoginScreenBody());
+        body: BlocProvider(
+          create: (context) => serviceLocator<AuthBloc>(),
+          child: const LoginScreenBody(),
+        ));
   }
 }
