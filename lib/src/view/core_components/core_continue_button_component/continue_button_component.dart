@@ -25,4 +25,12 @@ class ContinueButtonComponent extends StatelessWidget {
       ),
     );
   }
+
+  static void showButtonPressDialogForInvalidInputs(BuildContext context, String provider) {
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+      backgroundColor: Colors.redAccent,
+      content: Text('$provider'),
+      duration: const Duration(milliseconds: 600),
+    ));
+  }
 }
