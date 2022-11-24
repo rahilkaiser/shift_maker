@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
 import '../../../core/settings/settings_controller.dart';
-import '../core-components/app-bar-title-component/app_bar_title_component.dart';
 
+import '../core_components/app-bar-title-component/app_bar_title_component.dart';
 import 'components/login_screen_body.dart';
 
 class LoginScreen extends StatelessWidget {

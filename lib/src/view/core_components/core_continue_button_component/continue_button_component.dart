@@ -20,7 +20,7 @@ class ContinueButtonComponent extends StatelessWidget {
         onPressed: this.onPressed,
         child: Text(
           this.text,
-          style: themeData.textTheme.headline1!.copyWith(fontSize: 22),
+          style: themeData.textTheme.headline1!.copyWith(fontSize: 21),
         ),
       ),
     );

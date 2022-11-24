@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 
 import '../../../../core/theme/sizefit/core_spacing_constants.dart';
-import '../../core-components/app_title_component.dart';
-import '../../../core-components/core-continue-button-component/continue_button_component.dart';
+import '../../../../core/util/validators/AuthenticationInputValidators.dart';
+import '../../../core_components/core_continue_button_component/continue_button_component.dart';
+import '../../core_components/app_title_component.dart';
 import '../../register/register_screen.dart';
 
 class LoginScreenBody extends StatelessWidget {
@@ -10,6 +11,7 @@ class LoginScreenBody extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final GlobalKey<FormState> formKey = GlobalKey<FormState>();
     final themeData = Theme.of(context);
     Size size = MediaQuery.of(context).size;
 
@@ -30,19 +32,31 @@ class LoginScreenBody extends StatelessWidget {
             ),
             CoreSpacingConstants.getCoreFormSpacingSizedBox(context),
             CoreSpacingConstants.getCoreFormSpacingSizedBox(context),
-            TextFormField(
-              decoration: const InputDecoration(
-                suffixIcon: Icon(Icons.email),
-                labelText: 'Email',
+            Form(
+              key: formKey,
+              child: Column(
+                children: [
+                  TextFormField(
+                    autovalidateMode: AutovalidateMode.disabled,
+                    keyboardType: TextInputType.emailAddress,
+                    validator: AuthenticationInputValidators.validateEmail,
+                    decoration: const InputDecoration(
+                      suffixIcon: Icon(Icons.email),
+                      labelText: 'Email',
+                    ),
+                  ),
+                  CoreSpacingConstants.getCoreFormSpacingSizedBox(context),
+                  TextFormField(
+                    autovalidateMode: AutovalidateMode.disabled,
+                    validator: AuthenticationInputValidators.validatePassword,
+                    decoration: const InputDecoration(
+                      suffixIcon: Icon(Icons.lock),
+                      labelText: 'Password',
+                    ),
+                    obscureText: true,
+                  ),
+                ],
               ),
-            ),
-            CoreSpacingConstants.getCoreFormSpacingSizedBox(context),
-            TextFormField(
-              decoration: const InputDecoration(
-                suffixIcon: Icon(Icons.lock),
-                labelText: 'Password',
-              ),
-              obscureText: true,
             ),
             CoreSpacingConstants.getCoreFormSpacingSizedBox(context),
             CoreSpacingConstants.getCoreFormSpacingSizedBox(context),
@@ -59,7 +73,7 @@ class LoginScreenBody extends StatelessWidget {
                         ));
                   },
                   child: Text(
-                    "Sign Up",
+                    "Register now",
                     style: TextStyle(color: themeData.colorScheme.secondary),
                   ),
                 ),
@@ -69,7 +83,14 @@ class LoginScreenBody extends StatelessWidget {
             ContinueButtonComponent(
               text: "Login",
               onPressed: () {
-                this._showButtonPressDialog(context, "Login pressed");
+
+                if(formKey.currentState!.validate()) {
+
+                } else {
+                  this._showButtonPressDialog(context, "Invalid Input");
+                }
+
+                // this._showButtonPressDialog(context, "Login pressed");
               },
             )
           ],
@@ -80,8 +101,9 @@ class LoginScreenBody extends StatelessWidget {
 
   void _showButtonPressDialog(BuildContext context, String provider) {
     ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-      content: Text('$provider Button Pressed!'),
-      duration: const Duration(milliseconds: 400),
+      backgroundColor: Colors.redAccent,
+      content: Text('$provider'),
+      duration: const Duration(milliseconds: 600),
     ));
   }
 }

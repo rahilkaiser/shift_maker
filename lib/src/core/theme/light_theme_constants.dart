@@ -17,7 +17,7 @@ class LightThemeConstants {
 
   static Color get lightAccentColor => const Color.fromRGBO(74, 217, 217, 1);
 
-  static Color get _lightTextColorPrimary => Colors.black;
+  static Color get _lightTextColorPrimary => lightBackGroundColor;
 
   static TextTheme get lightTextTheme => TextTheme(
         headline1: CoreTextThemeConstants.getHeadingTextStyle(_lightTextColorPrimary),
