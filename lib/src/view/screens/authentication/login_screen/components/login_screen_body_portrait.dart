@@ -53,10 +53,9 @@ class LoginScreenBodyPortrait extends StatelessWidget {
                 ),
                 CoreSpacingConstants.getCoreFormSpacingSizedBox(context),
                 ContinueButtonComponent(
+                  showSpinner: state.isSubmitting,
                   text: "Login",
                   onPressed: () {
-                    debugPrint("PORT " + state.emailAddress);
-                    debugPrint("PORT " + state.password);
                     if (state.formKey.currentState!.validate()) {
                       context.read<LoginBloc>().add(const LoginEvent.loginWithEmailAndPasswordPressed());
                     } else {
@@ -68,7 +67,7 @@ class LoginScreenBodyPortrait extends StatelessWidget {
                 SizedBox(height: size.height * 0.025),
                 // CoreSpacingConstants.getCoreFormSpacingSizedBox(context),
                 // CircularProgressIndicator(color: themeData.colorScheme.secondary,),
-                if (state.isSubmitting) ...[const CircularProgressIndicator()]
+                // if (state.isSubmitting) ...[const CircularProgressIndicator()]
               ],
             );
           },

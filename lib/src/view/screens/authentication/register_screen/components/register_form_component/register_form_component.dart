@@ -13,13 +13,12 @@ class RegisterFormComponent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
     return Form(
       autovalidateMode: AutovalidateMode.disabled,
       key: context.read<RegisterBloc>().state.formKey,
       child: Column(
         children: [
-          EmailInputFieldComponent(),
+          const EmailInputFieldComponent(),
           CoreSpacingConstants.getCoreFormSpacingSizedBox(context),
           TextFormField(
             autovalidateMode: AutovalidateMode.disabled,
@@ -38,7 +37,8 @@ class RegisterFormComponent extends StatelessWidget {
           CoreSpacingConstants.getCoreFormSpacingSizedBox(context),
           TextFormField(
             autovalidateMode: AutovalidateMode.disabled,
-            validator: (input) => AuthenticationInputValidators.validateConfirmPassword(input, context.read<RegisterBloc>().state.password),
+            validator: (input) => AuthenticationInputValidators.validateConfirmPassword(
+                input, context.read<RegisterBloc>().state.password),
             decoration: const InputDecoration(
               suffixIcon: Icon(Icons.lock),
               hintText: "Re-enter your password",

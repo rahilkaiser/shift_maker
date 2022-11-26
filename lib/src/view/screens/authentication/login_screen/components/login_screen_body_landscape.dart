@@ -16,18 +16,22 @@ class LoginScreenBodyLandscape extends StatelessWidget {
     final themeData = Theme.of(context);
     Size size = MediaQuery.of(context).size;
 
-    return SingleChildScrollView(
-      scrollDirection: Axis.vertical,
-      physics: const BouncingScrollPhysics(),
-      child: BlocConsumer<LoginBloc, LoginState>(
-        listener: (context, state) {
-          // TODO: implement listener
-        },
-        builder: (context, state) {
-          return IntrinsicHeight(
+    return BlocConsumer<LoginBloc, LoginState>(
+      listener: (context, state) {
+        // TODO: implement listener
+      },
+      builder: (context, state) {
+        return SingleChildScrollView(
+          physics: const BouncingScrollPhysics(),
+          child: IntrinsicHeight(
             child: Column(
               children: [
-                const Padding(padding: EdgeInsets.only(top: 2), child: LinearProgressIndicator()),
+                // if (state.isSubmitting) ...[const LinearProgressIndicator()],
+
+                // Padding(
+                //   padding: EdgeInsets.only(top: 2),
+                //   child: state.isSubmitting ? const LinearProgressIndicator() : Container(),
+                // ),
                 Padding(
                   padding: CoreSpacingConstants.getCoreBodyContentPadding(size),
                   child: Row(
@@ -56,7 +60,6 @@ class LoginScreenBodyLandscape extends StatelessWidget {
                             const Text("Sign in with your email and password.", textAlign: TextAlign.center),
                             CoreSpacingConstants.getCoreFormSpacingSizedBox(context),
                             CoreSpacingConstants.getCoreFormSpacingSizedBox(context),
-                            CoreSpacingConstants.getCoreFormSpacingSizedBox(context),
                             Row(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
@@ -74,12 +77,11 @@ class LoginScreenBodyLandscape extends StatelessWidget {
                                 ),
                               ],
                             ),
-                            SizedBox(height: size.height * 0.025),
+                            SizedBox(height: size.height * 0.035),
                             ContinueButtonComponent(
+                              showSpinner: state.isSubmitting,
                               text: "Login",
                               onPressed: () {
-                                debugPrint("LANDSCAPE " + state.emailAddress);
-                                debugPrint("LAND " + state.password);
                                 if (state.formKey.currentState!.validate()) {
                                   BlocProvider.of<LoginBloc>(context)
                                       .add(const LoginEvent.loginWithEmailAndPasswordPressed());
@@ -97,9 +99,9 @@ class LoginScreenBodyLandscape extends StatelessWidget {
                 ),
               ],
             ),
-          );
-        },
-      ),
+          ),
+        );
+      },
     );
   }
 }

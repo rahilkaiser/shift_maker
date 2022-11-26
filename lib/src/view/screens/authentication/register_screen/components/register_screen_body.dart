@@ -34,14 +34,12 @@ class RegisterScreenBody extends StatelessWidget {
                 ),
                 CoreSpacingConstants.getCoreFormSpacingSizedBox(context),
                 SizedBox(height: size.height * 0.025),
-                RegisterFormComponent(),
+                const RegisterFormComponent(),
                 CoreSpacingConstants.getCoreFormSpacingSizedBox(context),
                 ContinueButtonComponent(
+                    showSpinner: state.isSubmitting,
                     text: "Register",
                     onPressed: () {
-
-                      debugPrint("PORT " + state.emailAddress);
-                      debugPrint("PORT " + state.password);
                       if (state.formKey.currentState!.validate()) {
                         BlocProvider.of<RegisterBloc>(context)
                             .add(const RegisterEvent.registerWithEmailAndPasswordPressed());
@@ -59,9 +57,7 @@ class RegisterScreenBody extends StatelessWidget {
                 ),
                 CoreSpacingConstants.getCoreFormSpacingSizedBox(context),
                 SizedBox(height: size.height * 0.025),
-                if (state.isSubmitting) ...[const CircularProgressIndicator()]
-                // if (state.isSubmitting) ...
-                // const LinearProgressIndicator()
+                // if (state.isSubmitting) ...[const CircularProgressIndicator()]
               ],
             );
           },
