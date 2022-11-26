@@ -1,3 +1,4 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'src/core/settings/settings_service.dart';
 
@@ -9,7 +10,7 @@ import 'src/injection.dart' as di;
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await di.init();
-
+  await Firebase.initializeApp();
   final settingsController = SettingsController(SettingsService());
   await settingsController.loadSettings();
 

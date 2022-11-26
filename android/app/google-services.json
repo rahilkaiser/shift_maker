@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "681539922990",
+    "project_id": "shiftmaker-d0904",
+    "storage_bucket": "shiftmaker-d0904.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:681539922990:android:7aac136d783243e64143bf",
+        "android_client_info": {
+          "package_name": "com.example.shift_maker"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "681539922990-kqejh12ad4aps64632raiq9tt4j1q96e.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.shift_maker",
+            "certificate_hash": "667c4c5234b59021897ec8bd8093cdb08b1233e4"
+          }
+        },
+        {
+          "client_id": "681539922990-mgem5o7u133154clg1dvgvvrpfjum49f.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDo3nnafQ8U3rB8DYxLvxn_MRAgFArw3Uk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "681539922990-mgem5o7u133154clg1dvgvvrpfjum49f.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
