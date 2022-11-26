@@ -1,19 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../../application/auth/auth_bloc/auth_bloc.dart';
-import '../../../../core/theme/sizefit/core_spacing_constants.dart';
-import '../../../core_components/core_continue_button_component/continue_button_component.dart';
-import '../../core_components/app_title_component.dart';
-import '../../register/register_screen.dart';
+import '../../../../../application/auth/auth_bloc/auth_bloc.dart';
+import '../../../../../core/theme/sizefit/core_spacing_constants.dart';
+import '../../../../../core/util/validators/AuthenticationInputValidators.dart';
+import '../../../components/app_title_component/app_title_component.dart';
+import '../../../components/continue_button_component/continue_button_component.dart';
+import '../../register_screen/register_screen.dart';
 import 'login_form_component/login_form_component.dart';
 
-class LoginScreenBody extends StatelessWidget {
-  const LoginScreenBody({Key? key}) : super(key: key);
+class LoginScreenBodyPortrait extends StatelessWidget {
+  const LoginScreenBodyPortrait({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    final GlobalKey<FormState> formKey = GlobalKey<FormState>();
     final themeData = Theme.of(context);
     Size size = MediaQuery.of(context).size;
 
@@ -37,7 +37,7 @@ class LoginScreenBody extends StatelessWidget {
                 CoreSpacingConstants.getCoreFormSpacingSizedBox(context),
                 CoreSpacingConstants.getCoreFormSpacingSizedBox(context),
                 LoginFormComponent(
-                  formKey: formKey,
+                  formKey: AuthenticationInputValidators.formKey,
                   passwordVal: (String? value) {
                     password = value;
                   },
@@ -53,7 +53,11 @@ class LoginScreenBody extends StatelessWidget {
                     const Text("Don’t have an account? "),
                     GestureDetector(
                       onTap: () {
-                        Navigator.push(context, MaterialPageRoute(builder: (context) => const RegisterScreen()));
+                        Navigator.of(context).push(
+                          MaterialPageRoute<RegisterScreen>(
+                            builder: (context) => const RegisterScreen(),
+                          ),
+                        );
                       },
                       child: Text("Register now", style: TextStyle(color: themeData.colorScheme.secondary)),
                     ),
@@ -63,7 +67,9 @@ class LoginScreenBody extends StatelessWidget {
                 ContinueButtonComponent(
                   text: "Login",
                   onPressed: () {
-                    if (formKey.currentState!.validate()) {
+                    debugPrint(email);
+                    debugPrint(password);
+                    if (AuthenticationInputValidators.formKey.currentState!.validate()) {
                       BlocProvider.of<AuthBloc>(context).add(LoginWithEmailAndPasswordPressed(email: email, password: password));
                     } else {
                       ContinueButtonComponent.showButtonPressDialogForInvalidInputs(context, "Invalid Input");
@@ -74,8 +80,7 @@ class LoginScreenBody extends StatelessWidget {
                 SizedBox(height: size.height * 0.025),
                 // CoreSpacingConstants.getCoreFormSpacingSizedBox(context),
                 // CircularProgressIndicator(color: themeData.colorScheme.secondary,),
-                if(state.isSubmitting) ...[const CircularProgressIndicator()]
-
+                if (state.isSubmitting) ...[const CircularProgressIndicator()]
               ],
             );
           },

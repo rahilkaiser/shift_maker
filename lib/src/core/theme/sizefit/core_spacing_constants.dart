@@ -6,7 +6,7 @@ class CoreSpacingConstants {
   /// The main Padding for app-content
   ///
   ///
-  static EdgeInsets getCoreBodyContentPadding(Size screenSize) => EdgeInsets.symmetric(horizontal: screenSize.width * 0.05, vertical: screenSize.width * 0.1);
+  static EdgeInsets getCoreBodyContentPadding(Size screenSize) => EdgeInsets.symmetric(horizontal: screenSize.width * 0.05, vertical: screenSize.height * 0.07);
 
   static SizedBox getCoreFormSpacingSizedBox(BuildContext context) {
     final mediaQuery = MediaQuery.of(context);

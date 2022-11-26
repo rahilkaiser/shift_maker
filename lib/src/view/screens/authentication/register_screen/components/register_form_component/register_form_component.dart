@@ -1,30 +1,39 @@
 import 'package:flutter/material.dart';
 
-import '../../../../../core/theme/sizefit/core_spacing_constants.dart';
-import '../../../../../core/util/validators/AuthenticationInputValidators.dart';
-import '../../../core_components/input_fields_components/email_input_field_component.dart';
+import '../../../../../../core/theme/sizefit/core_spacing_constants.dart';
+import '../../../../../../core/util/validators/AuthenticationInputValidators.dart';
+import '../../../../components/email_input_field_component/email_input_field_component.dart';
 
 class RegisterFormComponent extends StatelessWidget {
+  final ValueChanged<String?> emailValOnChange;
+  final ValueChanged<String?> passwordValOnChange;
+
   const RegisterFormComponent({
     Key? key,
     required this.formKey,
+    required this.emailValOnChange,
+    required this.passwordValOnChange,
   }) : super(key: key);
 
   final GlobalKey<FormState> formKey;
 
   @override
   Widget build(BuildContext context) {
-    String? password;
+    String? mainPassword;
+
     return Form(
       key: formKey,
       child: Column(
         children: [
-          // const EmailInputFieldComponent(),
+          EmailInputFieldComponent(
+            emailVal: this.emailValOnChange,
+          ),
           CoreSpacingConstants.getCoreFormSpacingSizedBox(context),
           TextFormField(
             autovalidateMode: AutovalidateMode.disabled,
-            onChanged: (newInput) {
-              password = newInput;
+            onChanged: (newValue) {
+              mainPassword = newValue;
+              this.passwordValOnChange(newValue);
             },
             validator: AuthenticationInputValidators.validatePassword,
             decoration: const InputDecoration(
@@ -37,7 +46,7 @@ class RegisterFormComponent extends StatelessWidget {
           CoreSpacingConstants.getCoreFormSpacingSizedBox(context),
           TextFormField(
             autovalidateMode: AutovalidateMode.disabled,
-            validator: (input) => AuthenticationInputValidators.validateConfirmPassword(input, password),
+            validator: (input) => AuthenticationInputValidators.validateConfirmPassword(input, mainPassword),
             decoration: const InputDecoration(
               suffixIcon: Icon(Icons.lock),
               hintText: "Re-enter your password",

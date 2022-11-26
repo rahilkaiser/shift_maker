@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../../../core/util/validators/AuthenticationInputValidators.dart';
 
+
 class EmailInputFieldComponent extends StatelessWidget {
   final ValueChanged<String?> emailVal;
 

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
-import '../../../../../core/theme/sizefit/core_spacing_constants.dart';
-import '../../../../../core/util/validators/AuthenticationInputValidators.dart';
-import '../../../core_components/input_fields_components/email_input_field_component.dart';
+import '../../../../../../core/theme/sizefit/core_spacing_constants.dart';
+import '../../../../../../core/util/validators/AuthenticationInputValidators.dart';
+import '../../../../components/email_input_field_component/email_input_field_component.dart';
 
 class LoginFormComponent extends StatelessWidget {
   final ValueChanged<String?> emailVal;

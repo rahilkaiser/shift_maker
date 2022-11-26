@@ -20,16 +20,16 @@ class ContinueButtonComponent extends StatelessWidget {
         onPressed: this.onPressed,
         child: Text(
           this.text,
-          style: themeData.textTheme.headline1!.copyWith(fontSize: 21),
+          style: themeData.textTheme.headline1!.copyWith(fontSize: 22),
         ),
       ),
     );
   }
 
-  static void showButtonPressDialogForInvalidInputs(BuildContext context, String provider) {
+  static void showButtonPressDialogForInvalidInputs(BuildContext context, String innerText) {
     ScaffoldMessenger.of(context).showSnackBar(SnackBar(
       backgroundColor: Colors.redAccent,
-      content: Text('$provider'),
+      content: Text(innerText),
       duration: const Duration(milliseconds: 600),
     ));
   }

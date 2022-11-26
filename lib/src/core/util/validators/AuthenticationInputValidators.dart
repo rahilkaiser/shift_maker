@@ -19,6 +19,8 @@ class AuthenticationInputValidators {
 
   static String get _kAddressNullError => "Please Enter your address";
 
+  static GlobalKey<FormState> get formKey => GlobalKey<FormState>();
+
   AuthenticationInputValidators._();
 
   /// Validates Email-Address

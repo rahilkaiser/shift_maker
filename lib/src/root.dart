@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
-import  'core/theme/theme.dart';
+import 'core/theme/theme.dart';
 
 import 'core/settings/settings_controller.dart';
-import 'view/auth/login/login_screen.dart';
+import 'view/screens/authentication/login_screen/login_screen.dart';
 
 class RootWidget extends StatelessWidget {
   final SettingsController settingsController;
@@ -29,7 +29,9 @@ class RootWidget extends StatelessWidget {
             GlobalCupertinoLocalizations.delegate,
           ],
           supportedLocales: const [
-            Locale('en', ),
+            Locale(
+              'en',
+            ),
           ],
           onGenerateTitle: (BuildContext context) => AppLocalizations.of(context)!.appTitle,
           theme: AppTheme.lightTheme,
