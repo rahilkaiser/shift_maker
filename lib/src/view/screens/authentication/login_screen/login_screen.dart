@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../../application/auth/auth_bloc/auth_bloc.dart';
+import '../../../../application/auth/login_bloc/login_bloc.dart';
 import '../../../../core/settings/settings_controller.dart';
 
 import '../../../../injection.dart';
@@ -41,9 +41,11 @@ class LoginScreen extends StatelessWidget {
         ],
       ),
       body: BlocProvider(
-        create: (context) => serviceLocator<AuthBloc>(),
+        create: (context) => serviceLocator<LoginBloc>(),
         lazy: true,
-        child: MediaQuery.of(context).orientation == Orientation.portrait ? const LoginScreenBodyPortrait() : const LoginScreenBodyLandscape(),
+        child: MediaQuery.of(context).orientation == Orientation.portrait
+            ? const LoginScreenBodyPortrait()
+            : const LoginScreenBodyLandscape(),
       ),
     );
   }

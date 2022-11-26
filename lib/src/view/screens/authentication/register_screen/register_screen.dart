@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../../../../application/auth/auth_bloc/auth_bloc.dart';
+import '../../../../application/auth/register_bloc/register_bloc.dart';
 import '../../../../injection.dart';
 
 import '../../components/app_bar_title_component/app_bar_title_component.dart';
@@ -14,7 +14,7 @@ class RegisterScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(title: const AppBarTitleComponent(title: "Register")),
       body: BlocProvider(
-        create: (context) => serviceLocator<AuthBloc>(),
+        create: (context) => serviceLocator<RegisterBloc>(),
         child: const RegisterScreenBody(),
       ),
     );

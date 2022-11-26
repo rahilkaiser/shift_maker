@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-
-import '../../../../../application/auth/auth_bloc/auth_bloc.dart';
+import '../../../../../application/auth/login_bloc/login_bloc.dart';
 import '../../../../../core/theme/sizefit/core_spacing_constants.dart';
-import '../../../../../core/util/validators/AuthenticationInputValidators.dart';
+
 import '../../../components/app_title_component/app_title_component.dart';
 import '../../../components/continue_button_component/continue_button_component.dart';
 import '../../register_screen/register_screen.dart';
@@ -17,14 +16,11 @@ class LoginScreenBodyPortrait extends StatelessWidget {
     final themeData = Theme.of(context);
     Size size = MediaQuery.of(context).size;
 
-    String? email;
-    String? password;
-
     return SingleChildScrollView(
       physics: const BouncingScrollPhysics(),
       child: Padding(
         padding: CoreSpacingConstants.getCoreBodyContentPadding(size),
-        child: BlocConsumer<AuthBloc, AuthState>(
+        child: BlocConsumer<LoginBloc, LoginState>(
           listener: (context, state) {
             // TODO: implement listener
           },
@@ -36,15 +32,7 @@ class LoginScreenBodyPortrait extends StatelessWidget {
                 const Text("Sign in with your email and password.", textAlign: TextAlign.center),
                 CoreSpacingConstants.getCoreFormSpacingSizedBox(context),
                 CoreSpacingConstants.getCoreFormSpacingSizedBox(context),
-                LoginFormComponent(
-                  formKey: AuthenticationInputValidators.formKey,
-                  passwordVal: (String? value) {
-                    password = value;
-                  },
-                  emailVal: (String? value) {
-                    email = value;
-                  },
-                ),
+                const LoginFormComponent(),
                 CoreSpacingConstants.getCoreFormSpacingSizedBox(context),
                 CoreSpacingConstants.getCoreFormSpacingSizedBox(context),
                 Row(
@@ -67,10 +55,10 @@ class LoginScreenBodyPortrait extends StatelessWidget {
                 ContinueButtonComponent(
                   text: "Login",
                   onPressed: () {
-                    debugPrint(email);
-                    debugPrint(password);
-                    if (AuthenticationInputValidators.formKey.currentState!.validate()) {
-                      BlocProvider.of<AuthBloc>(context).add(LoginWithEmailAndPasswordPressed(email: email, password: password));
+                    debugPrint("PORT " + state.emailAddress);
+                    debugPrint("PORT " + state.password);
+                    if (state.formKey.currentState!.validate()) {
+                      context.read<LoginBloc>().add(const LoginEvent.loginWithEmailAndPasswordPressed());
                     } else {
                       ContinueButtonComponent.showButtonPressDialogForInvalidInputs(context, "Invalid Input");
                     }

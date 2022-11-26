@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-import '../../../../../application/auth/auth_bloc/auth_bloc.dart';
+import '../../../../../application/auth/login_bloc/login_bloc.dart';
 import '../../../../../core/theme/sizefit/core_spacing_constants.dart';
-import '../../../../../core/util/validators/AuthenticationInputValidators.dart';
 import '../../../components/app_title_component/app_title_component.dart';
 import '../../../components/continue_button_component/continue_button_component.dart';
 import '../../register_screen/register_screen.dart';
@@ -17,15 +16,11 @@ class LoginScreenBodyLandscape extends StatelessWidget {
     final themeData = Theme.of(context);
     Size size = MediaQuery.of(context).size;
 
-    String? email;
-    String? password;
-
     return SingleChildScrollView(
       scrollDirection: Axis.vertical,
       physics: const BouncingScrollPhysics(),
-      child: BlocConsumer<AuthBloc, AuthState>(
+      child: BlocConsumer<LoginBloc, LoginState>(
         listener: (context, state) {
-          print("OOOOOO");
           // TODO: implement listener
         },
         builder: (context, state) {
@@ -42,16 +37,8 @@ class LoginScreenBodyLandscape extends StatelessWidget {
                       Flexible(
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.end,
-                          children: [
-                            LoginFormComponent(
-                              formKey: AuthenticationInputValidators.formKey,
-                              passwordVal: (String? value) {
-                                password = value;
-                              },
-                              emailVal: (String? value) {
-                                email = value;
-                              },
-                            ),
+                          children: const [
+                            LoginFormComponent(),
                           ],
                         ),
                       ),
@@ -82,7 +69,8 @@ class LoginScreenBodyLandscape extends StatelessWidget {
                                       ),
                                     );
                                   },
-                                  child: Text("Register now", style: TextStyle(color: themeData.colorScheme.secondary)),
+                                  child: Text("Register now",
+                                      style: TextStyle(color: themeData.colorScheme.secondary)),
                                 ),
                               ],
                             ),
@@ -90,12 +78,14 @@ class LoginScreenBodyLandscape extends StatelessWidget {
                             ContinueButtonComponent(
                               text: "Login",
                               onPressed: () {
-                                debugPrint(email);
-                                debugPrint(password);
-                                if (AuthenticationInputValidators.formKey.currentState!.validate()) {
-                                  BlocProvider.of<AuthBloc>(context).add(LoginWithEmailAndPasswordPressed(email: email, password: password));
+                                debugPrint("LANDSCAPE " + state.emailAddress);
+                                debugPrint("LAND " + state.password);
+                                if (state.formKey.currentState!.validate()) {
+                                  BlocProvider.of<LoginBloc>(context)
+                                      .add(const LoginEvent.loginWithEmailAndPasswordPressed());
                                 } else {
-                                  ContinueButtonComponent.showButtonPressDialogForInvalidInputs(context, "Invalid Input");
+                                  ContinueButtonComponent.showButtonPressDialogForInvalidInputs(
+                                      context, "Invalid Input");
                                 }
                               },
                             ),
