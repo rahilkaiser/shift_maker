@@ -6,8 +6,8 @@ import '../../../../../core/theme/sizefit/core_spacing_constants.dart';
 import '../../../components/continue_button_component/continue_button_component.dart';
 import 'register_form_component/register_form_component.dart';
 
-class RegisterScreenBody extends StatelessWidget {
-  const RegisterScreenBody({Key? key}) : super(key: key);
+class RegisterScreenBodyPortrait extends StatelessWidget {
+  const RegisterScreenBodyPortrait({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

@@ -46,8 +46,6 @@ class RegisterFormComponent extends StatelessWidget {
             ),
             obscureText: true,
           ),
-          CoreSpacingConstants.getCoreFormSpacingSizedBox(context),
-          CoreSpacingConstants.getCoreFormSpacingSizedBox(context),
         ],
       ),
     );
