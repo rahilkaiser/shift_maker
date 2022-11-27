@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../../../application/auth/listener/login_executor.dart';
 import '../../../../../application/auth/login_bloc/login_bloc.dart';
 import '../../../../../core/theme/sizefit/core_spacing_constants.dart';
 import '../../../components/app_title_component/app_title_component.dart';
@@ -18,7 +19,7 @@ class LoginScreenBodyLandscape extends StatelessWidget {
 
     return BlocConsumer<LoginBloc, LoginState>(
       listener: (context, state) {
-        // TODO: implement listener
+        LoginExecutor.onLoginAttempt(state, context);
       },
       builder: (context, state) {
         return Padding(

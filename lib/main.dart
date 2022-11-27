@@ -9,8 +9,8 @@ import 'src/injection.dart' as di;
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await di.init();
   await Firebase.initializeApp();
+  await di.init();
   final settingsController = SettingsController(SettingsService());
   await settingsController.loadSettings();
 

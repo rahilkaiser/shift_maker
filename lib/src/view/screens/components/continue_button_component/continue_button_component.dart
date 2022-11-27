@@ -35,9 +35,9 @@ class ContinueButtonComponent extends StatelessWidget {
     );
   }
 
-  static void showButtonPressDialogForInvalidInputs(BuildContext context, String innerText) {
+  static void showButtonPressDialogForInvalidInputs(BuildContext context, String innerText, {Color? color}) {
     ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-      backgroundColor: Colors.redAccent,
+      backgroundColor: color ?? Colors.redAccent,
       content: Text(innerText),
       duration: const Duration(milliseconds: 600),
     ));

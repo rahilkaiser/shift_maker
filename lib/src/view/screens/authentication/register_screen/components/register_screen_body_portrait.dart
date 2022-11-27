@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import '../../../../../application/auth/listener/register_executor.dart';
 import '../../../../../application/auth/register_bloc/register_bloc.dart';
 import '../../../../../core/theme/sizefit/core_spacing_constants.dart';
 
@@ -20,7 +21,7 @@ class RegisterScreenBodyPortrait extends StatelessWidget {
         padding: CoreSpacingConstants.getCoreBodyContentPadding(size),
         child: BlocConsumer<RegisterBloc, RegisterState>(
           listener: (context, state) {
-            // TODO: implement listener
+            RegisterExecutor.onRegistrationAttempt(state, context);
           },
           builder: (context, state) {
             return Column(
@@ -37,17 +38,20 @@ class RegisterScreenBodyPortrait extends StatelessWidget {
                 const RegisterFormComponent(),
                 CoreSpacingConstants.getCoreFormSpacingSizedBox(context),
                 ContinueButtonComponent(
-                    showSpinner: state.isSubmitting,
-                    text: "Register",
-                    onPressed: () {
-                      if (state.formKey.currentState!.validate()) {
-                        BlocProvider.of<RegisterBloc>(context)
-                            .add(const RegisterEvent.registerWithEmailAndPasswordPressed());
-                      } else {
-                        ContinueButtonComponent.showButtonPressDialogForInvalidInputs(
-                            context, "Invalid Input");
-                      }
-                    }),
+                  showSpinner: state.isSubmitting,
+                  text: "Register",
+                  onPressed: () {
+                    if (state.formKey.currentState!.validate()) {
+                      BlocProvider.of<RegisterBloc>(context)
+                          .add(const RegisterEvent.registerWithEmailAndPasswordPressed());
+                    } else {
+                      ContinueButtonComponent.showButtonPressDialogForInvalidInputs(
+                        context,
+                        "Invalid Input",
+                      );
+                    }
+                  },
+                ),
                 CoreSpacingConstants.getCoreFormSpacingSizedBox(context),
                 CoreSpacingConstants.getCoreFormSpacingSizedBox(context),
                 Text(
@@ -57,7 +61,6 @@ class RegisterScreenBodyPortrait extends StatelessWidget {
                 ),
                 CoreSpacingConstants.getCoreFormSpacingSizedBox(context),
                 SizedBox(height: size.height * 0.025),
-                // if (state.isSubmitting) ...[const CircularProgressIndicator()]
               ],
             );
           },

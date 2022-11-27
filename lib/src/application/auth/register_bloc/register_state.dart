@@ -7,14 +7,16 @@ class RegisterState with _$RegisterState {
     required String emailAddress,
     required String password,
     required bool isSubmitting,
+    required Option<Either<AuthFailure, Unit>> failureOrSuccessOption,
   }) = _RegisterState;
 
   const RegisterState._();
 
   factory RegisterState.initial() => RegisterState(
-    formKey: GlobalKey<FormState>(),
-    emailAddress: "",
-    password: "",
-    isSubmitting: false,
-  );
+        formKey: GlobalKey<FormState>(),
+        emailAddress: "",
+        password: "",
+        isSubmitting: false,
+        failureOrSuccessOption: none(),
+      );
 }

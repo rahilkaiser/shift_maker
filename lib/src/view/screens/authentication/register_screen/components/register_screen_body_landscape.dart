@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import '../../../../../application/auth/listener/register_executor.dart';
 import '../../../../../application/auth/register_bloc/register_bloc.dart';
 import '../../../../../core/theme/sizefit/core_spacing_constants.dart';
 
@@ -16,7 +17,7 @@ class RegisterScreenBodyLandscape extends StatelessWidget {
 
     return BlocConsumer<RegisterBloc, RegisterState>(
       listener: (context, state) {
-        // TODO: implement listener
+        RegisterExecutor.onRegistrationAttempt(state, context);
       },
       builder: (context, state) {
         return Padding(

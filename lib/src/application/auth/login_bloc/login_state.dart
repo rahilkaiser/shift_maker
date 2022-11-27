@@ -7,6 +7,7 @@ class LoginState with _$LoginState {
     required String emailAddress,
     required String password,
     required bool isSubmitting,
+    required Option<Either<AuthFailure, Unit>> failureOrSuccessOption,
   }) = _LoginState;
 
   const LoginState._();
@@ -16,5 +17,6 @@ class LoginState with _$LoginState {
         emailAddress: "",
         password: "",
         isSubmitting: false,
+        failureOrSuccessOption: none(),
       );
 }

@@ -1,9 +1,14 @@
 import 'dart:async';
 
 import 'package:bloc/bloc.dart';
+import 'package:dartz/dartz.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:meta/meta.dart';
+
+import '../../../core/util/failures/auth_failures/auth_failure.dart';
+import '../../../domain/repositories/auth_repository.dart';
 
 part 'login_event.dart';
 
@@ -12,7 +17,9 @@ part 'login_state.dart';
 part 'login_bloc.freezed.dart';
 
 class LoginBloc extends Bloc<LoginEvent, LoginState> {
-  LoginBloc() : super(LoginState.initial()) {
+  final AuthRepository authRepository;
+
+  LoginBloc({required this.authRepository}) : super(LoginState.initial()) {
     on<EmailChanged>((event, emit) {
       this.changeEmail(event, emit);
     });
@@ -21,13 +28,12 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
       this.changePassword(event, emit);
     });
 
-    on<LoginWithEmailAndPasswordPressed>((event, emit) {
-      this.loginWithEmailAndPasswordPressed(event, emit);
+    on<LoginWithEmailAndPasswordPressed>((event, emit) async {
+      await this.loginWithEmailAndPasswordPressed(event, emit);
     });
   }
 
   void changeEmail(EmailChanged event, Emitter<LoginState> emit) {
-    debugPrint("changeEmail " + event.email);
     emit(state.copyWith(
       emailAddress: event.email,
     ));
@@ -39,10 +45,19 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
     ));
   }
 
-  void loginWithEmailAndPasswordPressed(LoginWithEmailAndPasswordPressed event, Emitter<LoginState> emit) {
-
+  Future<void> loginWithEmailAndPasswordPressed(
+      LoginWithEmailAndPasswordPressed event, Emitter<LoginState> emit) async {
     emit(state.copyWith(
       isSubmitting: true,
+      failureOrSuccessOption: none(),
+    ));
+    final failureOrSuccess = await this
+        .authRepository
+        .loginWithEmailAndPasswort(emailAddress: state.emailAddress, password: state.password);
+
+    emit(state.copyWith(
+      isSubmitting: false,
+      failureOrSuccessOption: optionOf(failureOrSuccess),
     ));
   }
 }

@@ -16,30 +16,52 @@ class RootWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return AnimatedBuilder(
-      animation: settingsController,
-      builder: (BuildContext context, Widget? child) {
-        return MaterialApp(
-          debugShowCheckedModeBanner: false,
-          restorationScopeId: 'app',
-          localizationsDelegates: const [
-            AppLocalizations.delegate,
-            GlobalMaterialLocalizations.delegate,
-            GlobalWidgetsLocalizations.delegate,
-            GlobalCupertinoLocalizations.delegate,
-          ],
-          supportedLocales: const [
-            Locale(
-              'en',
-            ),
-          ],
-          onGenerateTitle: (BuildContext context) => AppLocalizations.of(context)!.appTitle,
-          theme: AppTheme.lightTheme,
-          darkTheme: AppTheme.darkTheme,
-          themeMode: settingsController.themeMode,
-          home: LoginScreen(settingsController: this.settingsController),
-        );
-      },
+
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      restorationScopeId: 'app',
+      localizationsDelegates: const [
+        AppLocalizations.delegate,
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+      ],
+      supportedLocales: const [
+        Locale(
+          'en',
+        ),
+      ],
+      onGenerateTitle: (BuildContext context) => AppLocalizations.of(context)!.appTitle,
+      theme: AppTheme.lightTheme,
+      darkTheme: AppTheme.darkTheme,
+      themeMode: settingsController.themeMode,
+      home: const LoginScreen(),
     );
+
+    // return AnimatedBuilder(
+    //   animation: settingsController,
+    //   builder: (BuildContext context, Widget? child) {
+    //     return MaterialApp(
+    //       debugShowCheckedModeBanner: false,
+    //       restorationScopeId: 'app',
+    //       localizationsDelegates: const [
+    //         AppLocalizations.delegate,
+    //         GlobalMaterialLocalizations.delegate,
+    //         GlobalWidgetsLocalizations.delegate,
+    //         GlobalCupertinoLocalizations.delegate,
+    //       ],
+    //       supportedLocales: const [
+    //         Locale(
+    //           'en',
+    //         ),
+    //       ],
+    //       onGenerateTitle: (BuildContext context) => AppLocalizations.of(context)!.appTitle,
+    //       theme: AppTheme.lightTheme,
+    //       darkTheme: AppTheme.darkTheme,
+    //       themeMode: settingsController.themeMode,
+    //       home: const LoginScreen(),
+    //     );
+    //   },
+    // );
   }
 }
