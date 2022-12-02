@@ -1,5 +1,6 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'src/view/routes/router.gr.dart' as r;
 import 'src/core/settings/settings_service.dart';
 
 import 'src/root.dart';
@@ -14,5 +15,9 @@ void main() async {
   final settingsController = SettingsController(SettingsService());
   await settingsController.loadSettings();
 
-  runApp(RootWidget(settingsController: settingsController));
+  final appRouter = r.AppRouter();
+  runApp(RootWidget(
+    settingsController: settingsController,
+    appRouter: appRouter,
+  ));
 }

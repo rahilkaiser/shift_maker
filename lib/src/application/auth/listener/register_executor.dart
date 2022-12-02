@@ -1,6 +1,8 @@
+import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 
 import '../../../core/util/failures/auth_failures/auth_failure.dart';
+import '../../../view/routes/router.gr.dart';
 import '../register_bloc/register_bloc.dart';
 
 class RegisterExecutor {
@@ -22,7 +24,7 @@ class RegisterExecutor {
               "Successfully registered",
               color: Colors.green,
             );
-            // Automatically sign in
+
             Navigator.pop(context);
           },
         ),

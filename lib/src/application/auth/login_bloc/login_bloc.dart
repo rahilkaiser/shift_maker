@@ -2,13 +2,13 @@ import 'dart:async';
 
 import 'package:bloc/bloc.dart';
 import 'package:dartz/dartz.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+
 import 'package:flutter/material.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:meta/meta.dart';
 
 import '../../../core/util/failures/auth_failures/auth_failure.dart';
-import '../../../domain/repositories/auth_repository.dart';
+import '../../../domain/repositories/auth/auth_repository.dart';
 
 part 'login_event.dart';
 

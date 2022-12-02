@@ -1,12 +1,13 @@
+import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../../application/auth/listener/login_executor.dart';
 import '../../../../../application/auth/login_bloc/login_bloc.dart';
 import '../../../../../core/theme/sizefit/core_spacing_constants.dart';
+import '../../../../routes/router.gr.dart';
 import '../../../components/app_title_component/app_title_component.dart';
 import '../../../components/continue_button_component/continue_button_component.dart';
-import '../../register_screen/register_screen.dart';
 import 'login_form_component/login_form_component.dart';
 
 class LoginScreenBodyLandscape extends StatelessWidget {
@@ -18,6 +19,7 @@ class LoginScreenBodyLandscape extends StatelessWidget {
     Size size = MediaQuery.of(context).size;
 
     return BlocConsumer<LoginBloc, LoginState>(
+      listenWhen: ((previous, current) => previous.failureOrSuccessOption != current.failureOrSuccessOption),
       listener: (context, state) {
         LoginExecutor.onLoginAttempt(state, context);
       },
@@ -82,11 +84,7 @@ class LoginScreenBodyLandscape extends StatelessWidget {
                                       const Text("Don’t have an account? "),
                                       GestureDetector(
                                         onTap: () {
-                                          Navigator.of(context).push(
-                                            MaterialPageRoute<RegisterScreen>(
-                                              builder: (context) => const RegisterScreen(),
-                                            ),
-                                          );
+                                          AutoRouter.of(context).push(RegisterScreenRoute());
                                         },
                                         child: Text("Register now",
                                             style: TextStyle(color: themeData.colorScheme.secondary)),

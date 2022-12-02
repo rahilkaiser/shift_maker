@@ -7,7 +7,7 @@ import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:meta/meta.dart';
 
 import '../../../core/util/failures/auth_failures/auth_failure.dart';
-import '../../../domain/repositories/auth_repository.dart';
+import '../../../domain/repositories/auth/auth_repository.dart';
 
 part 'register_event.dart';
 
@@ -60,5 +60,6 @@ class RegisterBloc extends Bloc<RegisterEvent, RegisterState> {
       isSubmitting: false,
       failureOrSuccessOption: optionOf(failureOrSuccess),
     ));
+
   }
 }

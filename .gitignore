@@ -44,5 +44,6 @@ app.*.map.json
 /android/app/release
 
 
-#freezed files
+#generated files
 *.freezed.dart
+*.gr.dart
