@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'application/auth/auth_status_bloc/auth_status_bloc.dart';
+import 'application/current_user/current_user_watcher_bloc/current_user_watcher_bloc.dart';
 import 'core/theme/theme.dart';
 
 import 'core/settings/settings_controller.dart';
@@ -23,9 +24,10 @@ class RootWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
-        BlocProvider(
+        BlocProvider<AuthStatusBloc>(
           //Get The Corresponding UserEntity
-          create: (context) => serviceLocator<AuthStatusBloc>()..add(const AuthStatusEvent.authCheckRequested()),
+          create: (context) =>
+              serviceLocator<AuthStatusBloc>()..add(const AuthStatusEvent.authCheckRequested()),
         ),
       ],
       child: MaterialApp.router(

@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../../application/auth/auth_status_bloc/auth_status_bloc.dart';
+import '../../../../application/current_user/current_user_watcher_bloc/current_user_watcher_bloc.dart';
 import '../../../routes/router.gr.dart';
 
 class SplashScreenBody extends StatelessWidget {
@@ -26,7 +27,6 @@ class SplashScreenBody extends StatelessWidget {
         BlocListener<AuthStatusBloc, AuthStatusState>(
           listener: (context, state) {
             if (state is Authenticated) {
-              //navigate to Home
               this._navigateAfterTimer(context, const HomeScreenRoute());
             } else if (state is Unauthenticated) {
               //Navigate to LoginScreen

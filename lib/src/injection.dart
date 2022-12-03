@@ -6,10 +6,13 @@ import 'application/auth/auth_status_bloc/auth_status_bloc.dart';
 import 'application/auth/login_bloc/login_bloc.dart';
 import 'application/auth/register_bloc/register_bloc.dart';
 
+import 'application/current_user/current_user_watcher_bloc/current_user_watcher_bloc.dart';
 import 'application/departments/department_observer_bloc/department_observer_bloc.dart';
 import 'domain/repositories/auth/auth_repository.dart';
+import 'domain/repositories/current_user/current_user_repository.dart';
 import 'domain/repositories/department/department_repository.dart';
 import 'infrastructure/repositories/auth/auth_repository_impl.dart';
+import 'infrastructure/repositories/current_user_repository_impl/current_user_repository_impl.dart';
 import 'infrastructure/repositories/department/department_repository_impl.dart';
 
 final serviceLocator = GetIt.instance;
@@ -26,6 +29,9 @@ Future<void> registerStateManagementDependencies() async {
   serviceLocator.registerFactory(() => RegisterBloc(authRepository: serviceLocator()));
   serviceLocator.registerFactory(() => AuthStatusBloc(authRepository: serviceLocator()));
 
+  //! currUser
+  serviceLocator.registerFactory(() => CurrentUserWatcherBloc(currentUserRepository: serviceLocator()));
+
   //! departments
   serviceLocator.registerFactory(() => DepartmentObserverBloc(departmentRepository: serviceLocator()));
 }
@@ -34,6 +40,10 @@ Future<void> registerRepositoryDependencies() async {
   //! departments
   serviceLocator.registerLazySingleton<DepartmentRepository>(
       () => DepartmentRepositoryImpl(firestore: serviceLocator()));
+
+  //! curr_user
+  serviceLocator.registerLazySingleton<CurrentUserRepository>(
+      () => CurrentUserRepositoryImpl(firestore: serviceLocator()));
 
   //! auth
   serviceLocator.registerLazySingleton<AuthRepository>(

@@ -37,9 +37,9 @@ class WorkerModel {
 
   factory WorkerModel.fromMap(Map<String, dynamic> map) {
     return WorkerModel(
-      id: map['id'] as String,
+      id: "",
       email: map['email'] as String,
-      phoneNumber: map['phoneNumber'] as String,
+      phoneNumber: map['phone_number'] as String,
       forename: map['forename'] as String,
       surname: map['surname'] as String,
       role: map['role'] as String,
@@ -67,8 +67,9 @@ class WorkerModel {
     );
   }
 
-  factory WorkerModel.fromFireStore(QueryDocumentSnapshot<Map<String, dynamic>> documentSnapshot) {
-    return WorkerModel.fromMap(documentSnapshot.data()).copyWith(id: documentSnapshot.id);
+  factory WorkerModel.fromFireStore(DocumentSnapshot documentSnapshot) {
+    final Map<String, dynamic> data = documentSnapshot.data() as Map<String, dynamic>;
+    return WorkerModel.fromMap(data).copyWith(id: documentSnapshot.id);
   }
 
   WorkerEntity toEntity() {

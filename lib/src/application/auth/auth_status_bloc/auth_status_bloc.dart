@@ -6,10 +6,6 @@ import 'package:meta/meta.dart';
 
 import '../../../domain/repositories/auth/auth_repository.dart';
 
-
-
-
-
 part 'auth_status_event.dart';
 
 part 'auth_status_state.dart';

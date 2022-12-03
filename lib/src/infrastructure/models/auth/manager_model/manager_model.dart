@@ -28,7 +28,7 @@ class ManagerModel {
 
   factory ManagerModel.fromMap(Map<String, dynamic> map) {
     return ManagerModel(
-      id: map['id'] as String,
+      id: "",
       email: map['email'] as String,
       name: map['name'] as String,
       serverTimeStamp: map['serverTimeStamp'] as dynamic,
@@ -49,8 +49,10 @@ class ManagerModel {
     );
   }
 
-  factory ManagerModel.fromFireStore(QueryDocumentSnapshot<Map<String, dynamic>> documentSnapshot) {
-    return ManagerModel.fromMap(documentSnapshot.data()).copyWith(id: documentSnapshot.id);
+  factory ManagerModel.fromFireStore(DocumentSnapshot documentSnapshot) {
+    final Map<String, dynamic> data = documentSnapshot.data() as Map<String, dynamic>;
+    ManagerModel result = ManagerModel.fromMap(data).copyWith(id: documentSnapshot.id);
+    return result;
   }
 
   ManagerEntity toEntity() {
