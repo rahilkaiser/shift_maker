@@ -5,8 +5,11 @@ import '../../../../application/current_user/current_user_watcher_bloc/current_u
 
 import '../../../../application/departments/department_observer_bloc/department_observer_bloc.dart';
 
+import '../../../../domain/entities/user/user_entity.dart';
 import '../../../../domain/entities/users/manager/manager_entity.dart';
 import '../../../../domain/entities/users/worker/worker_entity.dart';
+import 'home_screen_scroll_view_components/home_screen_scroll_view_manager_component.dart';
+import 'home_screen_scroll_view_components/home_screen_scroll_view_worker_component.dart';
 
 class HomeScreenBodyPortrait extends StatelessWidget {
   const HomeScreenBodyPortrait({Key? key}) : super(key: key);
@@ -15,35 +18,8 @@ class HomeScreenBodyPortrait extends StatelessWidget {
   Widget build(BuildContext context) {
     final themeData = Theme.of(context);
     Size size = MediaQuery.of(context).size;
-    return BlocBuilder<CurrentUserWatcherBloc, CurrentUserWatcherState>(
-      builder: (context, currUserState) {
         return BlocBuilder<DepartmentObserverBloc, DepartmentObserverState>(
           builder: (context, state) {
-            if (currUserState is CurrentUserWatcherSuccessState) {
-              print("JNJNJNNJN");
-              final uEntity = currUserState.userEntity;
-              print(uEntity);
-              if (uEntity is ManagerEntity) {
-                return Center(
-                  child: Text(
-                    uEntity.name,
-                    style: Theme.of(context).textTheme.headline5?.copyWith(
-                          color: themeData.errorColor,
-                        ),
-                  ),
-                );
-              } else if (uEntity is WorkerEntity) {
-                return Center(
-                  child: Text(
-                    uEntity.email,
-                    style: Theme.of(context).textTheme.headline5?.copyWith(
-                          color: themeData.errorColor,
-                        ),
-                  ),
-                );
-              }
-            }
-
             if (state is DepartmentObserverInitialState) {
               return Container();
             } else if (state is DepartmentObserverLoadingState) {
@@ -87,14 +63,5 @@ class HomeScreenBodyPortrait extends StatelessWidget {
             );
           },
         );
-      },
-    );
   }
 }
-
-// return Center(
-//   child: Container(
-//     color: Colors.green,
-//     child: Text(state.toString(), style: Theme.of(context).textTheme.headline2,),
-//   ),
-// );

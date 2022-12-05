@@ -27,10 +27,10 @@ class SplashScreenBody extends StatelessWidget {
         BlocListener<AuthStatusBloc, AuthStatusState>(
           listener: (context, state) {
             if (state is Authenticated) {
-              this._navigateAfterTimer(context, const HomeScreenRoute());
+              this._navigateAfterTimer(context, const HomeRoute());
             } else if (state is Unauthenticated) {
               //Navigate to LoginScreen
-              this._navigateAfterTimer(context, const LoginScreenRoute());
+              this._navigateAfterTimer(context, const LoginRoute());
             }
           },
         ),

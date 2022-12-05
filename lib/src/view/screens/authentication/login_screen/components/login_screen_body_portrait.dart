@@ -44,7 +44,7 @@ class LoginScreenBodyPortrait extends StatelessWidget {
                     const Text("Don’t have an account? "),
                     GestureDetector(
                       onTap: () {
-                        AutoRouter.of(context).push(RegisterScreenRoute());
+                        AutoRouter.of(context).push(RegisterRoute());
                       },
                       child: Text("Register now", style: TextStyle(color: themeData.colorScheme.secondary)),
                     ),

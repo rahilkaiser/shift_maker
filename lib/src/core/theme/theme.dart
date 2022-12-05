@@ -43,14 +43,16 @@ class AppTheme {
   static final ThemeData darkTheme = ThemeData(
     colorSchemeSeed: DarkThemeConstants.darkAccentColor,
     brightness: Brightness.dark,
-    useMaterial3: false,
+    useMaterial3: true,
     textTheme: DarkThemeConstants.darkTextTheme,
   );
 
   static final ThemeData lightTheme = ThemeData(
     textTheme: LightThemeConstants.lightTextTheme,
-    colorSchemeSeed: DarkThemeConstants.darkOnPrimaryColor,
+    // colorSchemeSeed: DarkThemeConstants.darkOnPrimaryColor,
+    // colorSchemeSeed: Colors.red.withOpacity(0.5),
+    colorSchemeSeed: Colors.indigo.withOpacity(0.5),
     brightness: Brightness.light,
-    useMaterial3: false,
+    useMaterial3: true,
   );
 }

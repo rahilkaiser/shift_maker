@@ -53,6 +53,7 @@ class DepartmentObserverBloc extends Bloc<DepartmentObserverEvent, DepartmentObs
 
   @override
   Future<void> close() async {
+    print("CLOSE");
     await this._streamSubscription?.cancel();
     return super.close();
   }

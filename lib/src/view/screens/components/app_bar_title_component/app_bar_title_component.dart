@@ -10,8 +10,9 @@ class AppBarTitleComponent extends StatelessWidget {
     final themeData = Theme.of(context);
     return Text(
       this.title,
-      style: themeData.textTheme.headline1!.copyWith(
+      style: themeData.textTheme.headline5!.copyWith(
         fontSize: 22,
+        fontWeight: FontWeight.w600
       ),
     );
   }

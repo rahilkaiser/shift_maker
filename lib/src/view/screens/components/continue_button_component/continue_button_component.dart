@@ -5,9 +5,7 @@ class ContinueButtonComponent extends StatelessWidget {
   final void Function()? onPressed;
   final bool showSpinner;
 
-  const ContinueButtonComponent(
-      {Key? key, required this.text, required this.onPressed, required this.showSpinner})
-      : super(key: key);
+  const ContinueButtonComponent({Key? key, required this.text, required this.onPressed, required this.showSpinner}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -15,12 +13,13 @@ class ContinueButtonComponent extends StatelessWidget {
     Size size = MediaQuery.of(context).size;
     return SizedBox(
       width: double.infinity,
-      height: MediaQuery.of(context).orientation == Orientation.portrait
-          ? size.height * 0.08
-          : size.height * 0.18,
+      height: MediaQuery.of(context).orientation == Orientation.portrait ? size.height * 0.08 : size.height * 0.18,
       child: ElevatedButton(
         style: ElevatedButton.styleFrom(
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(20),
+          ),
+          backgroundColor: themeData.colorScheme.inversePrimary,
         ),
         onPressed: this.onPressed,
         child: showSpinner
@@ -29,7 +28,10 @@ class ContinueButtonComponent extends StatelessWidget {
               )
             : Text(
                 this.text,
-                style: themeData.textTheme.headline1!.copyWith(fontSize: 22),
+                style: themeData.textTheme.headline5!.copyWith(
+                  fontSize: 22,
+                  fontWeight: FontWeight.w500,
+                ),
               ),
       ),
     );

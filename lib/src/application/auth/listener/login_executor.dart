@@ -26,7 +26,7 @@ class LoginExecutor {
               color: Colors.green,
             );
             BlocProvider.of<AuthStatusBloc>(context).add(const AuthStatusEvent.authCheckRequested());
-            AutoRouter.of(context).replace(const HomeScreenRoute());
+            AutoRouter.of(context).replace(const HomeRoute());
           },
         ),
       );

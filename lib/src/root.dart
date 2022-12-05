@@ -4,6 +4,7 @@ import 'package:flutter_gen/gen_l10n/app_localizations.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'application/auth/auth_status_bloc/auth_status_bloc.dart';
 import 'application/current_user/current_user_watcher_bloc/current_user_watcher_bloc.dart';
+import 'application/current_user/theme_mode_bloc/theme_mode_bloc.dart';
 import 'core/theme/theme.dart';
 
 import 'core/settings/settings_controller.dart';
@@ -26,57 +27,64 @@ class RootWidget extends StatelessWidget {
       providers: [
         BlocProvider<AuthStatusBloc>(
           //Get The Corresponding UserEntity
-          create: (context) =>
-              serviceLocator<AuthStatusBloc>()..add(const AuthStatusEvent.authCheckRequested()),
+          create: (context) => serviceLocator<AuthStatusBloc>()..add(const AuthStatusEvent.authCheckRequested()),
+        ),
+        BlocProvider<ThemeModeBloc>(
+          //Get The Corresponding UserEntity
+          create: (context) => serviceLocator<ThemeModeBloc>(),
         ),
       ],
-      child: MaterialApp.router(
-        routeInformationParser: this.appRouter.defaultRouteParser(),
-        routerDelegate: appRouter.delegate(),
-        debugShowCheckedModeBanner: false,
-        restorationScopeId: 'app',
-        localizationsDelegates: const [
-          AppLocalizations.delegate,
-          GlobalMaterialLocalizations.delegate,
-          GlobalWidgetsLocalizations.delegate,
-          GlobalCupertinoLocalizations.delegate,
-        ],
-        supportedLocales: const [
-          Locale(
-            'en',
-          ),
-        ],
-        onGenerateTitle: (BuildContext context) => AppLocalizations.of(context)!.appTitle,
-        theme: AppTheme.lightTheme,
-        darkTheme: AppTheme.darkTheme,
-        themeMode: settingsController.themeMode,
+      child: BlocBuilder<ThemeModeBloc, ThemeModeSelectionState>(
+        builder: (context, state) {
+          return MaterialApp.router(
+            routeInformationParser: this.appRouter.defaultRouteParser(),
+            routerDelegate: appRouter.delegate(),
+            debugShowCheckedModeBanner: false,
+            restorationScopeId: 'app',
+            localizationsDelegates: const [
+              AppLocalizations.delegate,
+              GlobalMaterialLocalizations.delegate,
+              GlobalWidgetsLocalizations.delegate,
+              GlobalCupertinoLocalizations.delegate,
+            ],
+            supportedLocales: const [
+              Locale(
+                'en',
+              ),
+            ],
+            onGenerateTitle: (BuildContext context) => AppLocalizations.of(context)!.appTitle,
+            theme: AppTheme.lightTheme,
+            darkTheme: AppTheme.darkTheme,
+            themeMode: BlocProvider.of<ThemeModeBloc>(context).state.themeMode,
+          );
+        },
       ),
     );
-
-    // return AnimatedBuilder(
-    //   animation: settingsController,
-    //   builder: (BuildContext context, Widget? child) {
-    //     return MaterialApp(
-    //       debugShowCheckedModeBanner: false,
-    //       restorationScopeId: 'app',
-    //       localizationsDelegates: const [
-    //         AppLocalizations.delegate,
-    //         GlobalMaterialLocalizations.delegate,
-    //         GlobalWidgetsLocalizations.delegate,
-    //         GlobalCupertinoLocalizations.delegate,
-    //       ],
-    //       supportedLocales: const [
-    //         Locale(
-    //           'en',
-    //         ),
-    //       ],
-    //       onGenerateTitle: (BuildContext context) => AppLocalizations.of(context)!.appTitle,
-    //       theme: AppTheme.lightTheme,
-    //       darkTheme: AppTheme.darkTheme,
-    //       themeMode: settingsController.themeMode,
-    //       home: const LoginScreen(),
-    //     );
-    //   },
-    // );
   }
 }
+
+// return AnimatedBuilder(
+//   animation: settingsController,
+//   builder: (BuildContext context, Widget? child) {
+//     return MaterialApp(
+//       debugShowCheckedModeBanner: false,
+//       restorationScopeId: 'app',
+//       localizationsDelegates: const [
+//         AppLocalizations.delegate,
+//         GlobalMaterialLocalizations.delegate,
+//         GlobalWidgetsLocalizations.delegate,
+//         GlobalCupertinoLocalizations.delegate,
+//       ],
+//       supportedLocales: const [
+//         Locale(
+//           'en',
+//         ),
+//       ],
+//       onGenerateTitle: (BuildContext context) => AppLocalizations.of(context)!.appTitle,
+//       theme: AppTheme.lightTheme,
+//       darkTheme: AppTheme.darkTheme,
+//       themeMode: settingsController.themeMode,
+//       home: const LoginScreen(),
+//     );
+//   },
+// );
