@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
+import '../../../../application/current_user/theme_mode_bloc/theme_mode_bloc.dart';
 import 'components/manager_home_screen_body.dart';
 
 class ManagerHomeScreen extends StatelessWidget {
@@ -9,11 +11,26 @@ class ManagerHomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
     final themeData = Theme.of(context);
     Size size = MediaQuery.of(context).size;
 
-    return const ManagerHomeScreenBody();
+
+
+    return Scaffold(
+      floatingActionButton: FloatingActionButton(
+        child: Icon(Icons.refresh),
+        onPressed: () {
+          final provider = BlocProvider.of<ThemeModeBloc>(context);
+
+          if (provider.state.themeMode == ThemeMode.dark) {
+            provider.add(const ThemeModeEvent.ThemeModeLightSelectEvent());
+          } else {
+            provider.add(const ThemeModeEvent.ThemeModeDarkSelectEvent());
+          }
+        },
+      ),
+      body: const ManagerHomeScreenBody(),
+    );
   }
 }
 

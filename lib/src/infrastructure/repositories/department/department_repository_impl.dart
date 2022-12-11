@@ -37,20 +37,23 @@ class DepartmentRepositoryImpl implements DepartmentRepository {
   }
 
   @override
-  Stream<Either<DepartmentFailure, List<DepartmentEntity?>>> watchAll() async* {
+  Stream<Either<DepartmentFailure, List<DepartmentEntity>>> watchAll() async* {
     final userDocRef = await firestore.getCurrentUserDocument();
     final currUserRole = await firestore.getCurrentUserRole();
 
     var result = firestore.collection("departments").snapshots().map(
       (snap) {
-        return right<DepartmentFailure, List<DepartmentEntity?>>(
-          snap.docs.map(
-            (doc) {
-              if (currUserRole == UserRole.MANAGER && doc.data()['manager'].id == userDocRef.id) {
-                return DepartmentModel.fromFireStore(doc).toEntity();
-              }
-            },
-          ).toList(),
+        return right<DepartmentFailure, List<DepartmentEntity>>(
+          snap.docs
+              .map(
+                (doc) {
+                  if (currUserRole == UserRole.MANAGER && doc.data()['manager'].id == userDocRef.id) {
+                    return DepartmentModel.fromFireStore(doc).toEntity();
+                  }
+                },
+              )
+              .whereType<DepartmentEntity>()
+              .toList(),
         );
       },
     )

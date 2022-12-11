@@ -15,7 +15,7 @@ part 'department_observer_state.dart';
 class DepartmentObserverBloc extends Bloc<DepartmentObserverEvent, DepartmentObserverState> {
   final DepartmentRepository departmentRepository;
 
-  StreamSubscription<Either<DepartmentFailure, List<DepartmentEntity?>>>? _streamSubscription;
+  StreamSubscription<Either<DepartmentFailure, List<DepartmentEntity>>>? _streamSubscription;
 
   DepartmentObserverBloc({required this.departmentRepository}) : super(DepartmentObserverInitialState()) {
     on<ObserveAllEvent>((event, emit) async {
@@ -28,32 +28,32 @@ class DepartmentObserverBloc extends Bloc<DepartmentObserverEvent, DepartmentObs
   }
 
   Future<void> observeAllEvents(ObserveAllEvent event, Emitter<DepartmentObserverState> emit) async {
-    print("AAAAA");
-
     emit(DepartmentObserverLoadingState());
     await this._streamSubscription?.cancel();
 
     this._streamSubscription = departmentRepository.watchAll().listen(
       (failureOrDepart) {
-        print("TEST");
         add(DepartmentUpdatedEvent(failureOrDepart: failureOrDepart));
       },
     );
   }
 
   void observeDepartmentUpdated(DepartmentUpdatedEvent event, Emitter<DepartmentObserverState> emit) {
-    print("EEEEE");
-    print(event.failureOrDepart);
-
     event.failureOrDepart.fold(
       (failure) => emit(DepartmentObserverFailureState(departmentFailure: failure)),
-      (departs) => emit(DepartmentObserverSuccessState(departmentEntities: departs)),
+      (departs) {
+        List<DepartmentEntity> depTest = [];
+        for (int i = 0; i < 10; i++) {
+          depTest.add(departs[0]);
+        }
+
+        return emit(DepartmentObserverSuccessState(departmentEntities: departs));
+      },
     );
   }
 
   @override
   Future<void> close() async {
-    print("CLOSE");
     await this._streamSubscription?.cancel();
     return super.close();
   }

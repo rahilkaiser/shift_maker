@@ -10,7 +10,7 @@ abstract class DepartmentRepository {
   /// Listens to all Departments
   ///
   ///
-  Stream<Either<DepartmentFailure,List<DepartmentEntity?>>> watchAll();
+  Stream<Either<DepartmentFailure,List<DepartmentEntity>>> watchAll();
 
   /// Creates a new Department
   ///

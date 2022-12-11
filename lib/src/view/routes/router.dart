@@ -8,6 +8,9 @@ import '../screens/home/home_screen.dart';
 import '../screens/manager/manager_dashboard.dart';
 import '../screens/manager/manager_home_screen/manager_home_screen.dart';
 
+import '../screens/manager/manager_overview_department_screen/components/manager_department_editor_screen/manager_department_editor_screen.dart';
+import '../screens/manager/manager_overview_department_screen/components/manager_department_details_view/components/manager_edit_department_screen_body.dart';
+import '../screens/manager/manager_overview_department_screen/components/manager_department_details_view/manager_department_details_screen.dart';
 import '../screens/manager/manager_overview_department_screen/manager_overview_department_screen.dart';
 import '../screens/manager/manager_overview_worker_screen/manager_overview_worker_screen.dart';
 import '../screens/manager/manager_profile_screen/manager_profile_screen.dart';
@@ -25,7 +28,19 @@ import '../screens/splash/splash_screen.dart';
     ]),
 
     AutoRoute(name: 'ManagerOverviewDepartmentRouter', page: EmptyRouterScreen, children: [
-      AutoRoute(path: '', page: ManagerOverviewDepartmentScreen),
+      AutoRoute(path: '', page: ManagerOverviewDepartmentScreen, deferredLoading: true),
+      CustomRoute(
+        path: 'department',
+        page: ManagerDepartmentDetailsScreen,
+        transitionsBuilder: TransitionsBuilders.fadeIn,
+        deferredLoading: true,
+      ),
+      CustomRoute(
+        path: 'edit',
+        page: ManagerDepartmentEditorScreen,
+        transitionsBuilder: TransitionsBuilders.fadeIn,
+        deferredLoading: true,
+      ),
     ]),
 
     AutoRoute(name: 'ManagerOverviewWorkerRouter', page: EmptyRouterScreen, children: [
@@ -33,8 +48,13 @@ import '../screens/splash/splash_screen.dart';
     ]),
 
     AutoRoute(name: 'ManagerProfileRouter', page: EmptyRouterScreen, children: [
-      AutoRoute(path: '', page: ManagerProfileScreen),
-      AutoRoute(path: 'account', page: ManagerMyAccountScreen),
+      AutoRoute(path: '', page: ManagerProfileScreen, deferredLoading: true),
+      CustomRoute(
+        path: 'account',
+        page: ManagerMyAccountScreen,
+        transitionsBuilder: TransitionsBuilders.fadeIn,
+        deferredLoading: true,
+      ),
     ]),
     //SettingsViews
   ]),
