@@ -8,6 +8,7 @@ import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import '../../../../../../../application/core/is_editable_bloc/is_editable_bloc.dart';
 import '../../../../../../../core/theme/sizefit/core_spacing_constants.dart';
 import '../../../../../../../domain/entities/department/department_entity.dart';
+import '../../../../../components/continue_button_component/continue_button_component.dart';
 
 class ManagerEditDepartmentScreenBody extends StatefulWidget {
   final DepartmentEntity departmentEntity;
@@ -314,7 +315,7 @@ class _ManagerEditDepartmentScreenBodyState extends State<ManagerEditDepartmentS
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               Row(
-                                children: [
+                                children: const [
                                   Icon(Icons.calendar_month),
                                   SizedBox(
                                     width: 8,
@@ -351,7 +352,7 @@ class _ManagerEditDepartmentScreenBodyState extends State<ManagerEditDepartmentS
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Row(
-                            children: [
+                            children: const [
                               Icon(Icons.picture_as_pdf),
                               SizedBox(
                                 width: 8,
@@ -386,7 +387,7 @@ class _ManagerEditDepartmentScreenBodyState extends State<ManagerEditDepartmentS
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Row(
-                            children: [
+                            children: const [
                               Icon(Icons.inventory_outlined),
                               SizedBox(
                                 width: 8,
@@ -421,7 +422,7 @@ class _ManagerEditDepartmentScreenBodyState extends State<ManagerEditDepartmentS
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Row(
-                            children: [
+                            children: const [
                               Icon(Icons.archive),
                               SizedBox(
                                 width: 8,
@@ -465,7 +466,7 @@ class _ManagerEditDepartmentScreenBodyState extends State<ManagerEditDepartmentS
                               "Eingesetztes Personal",
                               style: themeData.textTheme.headline5?.copyWith(fontSize: 18, fontWeight: FontWeight.w600),
                             ),
-                            SizedBox(
+                            const SizedBox(
                               height: 8,
                             ),
                             Row(
@@ -519,7 +520,7 @@ class _ManagerEditDepartmentScreenBodyState extends State<ManagerEditDepartmentS
                               "Springer",
                               style: themeData.textTheme.headline5?.copyWith(fontSize: 18, fontWeight: FontWeight.w600),
                             ),
-                            SizedBox(
+                            const SizedBox(
                               height: 8,
                             ),
                             Row(
@@ -573,7 +574,7 @@ class _ManagerEditDepartmentScreenBodyState extends State<ManagerEditDepartmentS
                               "Aktuell eingeloggtes Personal",
                               style: themeData.textTheme.headline5?.copyWith(fontSize: 18, fontWeight: FontWeight.w600),
                             ),
-                            SizedBox(
+                            const SizedBox(
                               height: 8,
                             ),
                             Row(
@@ -608,47 +609,23 @@ class _ManagerEditDepartmentScreenBodyState extends State<ManagerEditDepartmentS
                 ),
               ),
             ),
-            SizedBox(
+            const SizedBox(
               height: 38,
             ),
-
-            Container(
-              width: double.maxFinite,
-              height: 65,
-              child: ElevatedButton(
-                onPressed: () {},
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Text(
-                    "NFC verwalten",
-                    style: themeData.textTheme.headline6?.copyWith(
-                        // fontWeight: FontWeight.w600
-                        ),
-                  ),
-                ),
-              ),
+            ContinueButtonComponent(
+              onPressed: () {},
+              showSpinner: false,
+              text: "NFC verwalten",
             ),
-
-            SizedBox(
+            const SizedBox(
               height: 38,
             ),
-            Container(
-              width: double.maxFinite,
-              height: 65,
-              child: ElevatedButton(
-                onPressed: () {},
-                style: ElevatedButton.styleFrom(backgroundColor: themeData.errorColor),
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Text(
-                    "Objekt löschen",
-                    style: themeData.textTheme.headline6?.copyWith(
-                      color: themeData.colorScheme.onError,
-                      // fontWeight: FontWeight.w600
-                    ),
-                  ),
-                ),
-              ),
+            ContinueButtonComponent(
+              onPressed: () {},
+              showSpinner: false,
+              text: "Objekt löschen",
+              colorOverWrite: themeData.colorScheme.error,
+              textColorOverWrite: themeData.colorScheme.onError,
             ),
           ],
         ),

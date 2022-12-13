@@ -78,7 +78,7 @@ class ManagerOverviewDepartmentScreenBody extends StatelessWidget {
                 ),
               );
             }
-            return SliverFillRemaining(
+            return const SliverFillRemaining(
               child: Center(
                 child: Text("Empty"),
               ),
@@ -86,66 +86,6 @@ class ManagerOverviewDepartmentScreenBody extends StatelessWidget {
           },
         ),
       ],
-      // child: Padding(
-      //   padding: CoreSpacingConstants.getCoreBodyContentPaddingHorizontal(size),
-      //   child: SizedBox(
-      //     width: double.maxFinite,
-      //     child: Column(
-      //       children: [
-      //         CoreSpacingConstants.getCoreFormSpacingSizedBox(context),
-      //
-      //         CoreSpacingConstants.getCoreFormSpacingSizedBox(context),
-      //
-      //         BlocBuilder<DepartmentObserverBloc, DepartmentObserverState>(
-      //           builder: (context, state) {
-      //             if (state is DepartmentObserverSuccessState) {
-      //               return GridView.count(
-      //                 physics: const ScrollPhysics(),
-      //                 shrinkWrap: true,
-      //                 crossAxisCount: 1,
-      //                 padding: const EdgeInsets.all(8),
-      //                 children: List.generate(
-      //                   state.departmentEntities.length,
-      //                   (i) {
-      //                     return Hero(
-      //                       tag: i,
-      //                       createRectTween: (Rect? begin, Rect? end) {
-      //                         return CustomRectTween(a: begin!, b: end!);
-      //                       },
-      //                       child: ManagerDepartmentCardComponent(department: state.departmentEntities[i]),
-      //                     );
-      //                   },
-      //                 ),
-      //               );
-      //             } else if (state is DepartmentObserverInitialState) {
-      //               return Container();
-      //             } else if (state is DepartmentObserverLoadingState) {
-      //               return Center(
-      //                 child: CircularProgressIndicator(
-      //                   color: themeData.colorScheme.secondary,
-      //                 ),
-      //               );
-      //             } else if (state is DepartmentObserverFailureState) {
-      //               return Center(
-      //                 child: Text(
-      //                   state.toString(),
-      //                   style: Theme.of(context).textTheme.headline5?.copyWith(
-      //                         color: themeData.errorColor,
-      //                       ),
-      //                 ),
-      //               );
-      //             }
-      //             return Center(
-      //               child: Text("Empty"),
-      //             );
-      //           },
-      //         ),
-      //
-      //         // CoreSpacingConstants.getCoreFormSpacingSizedBox(context),
-      //       ],
-      //     ),
-      //   ),
-      // ),
     );
   }
 }

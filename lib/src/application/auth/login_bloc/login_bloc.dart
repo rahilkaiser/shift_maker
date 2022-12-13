@@ -53,7 +53,8 @@ class LoginBloc extends Bloc<LoginEvent, LoginState> {
     ));
     final failureOrSuccess = await this
         .authRepository
-        .loginWithEmailAndPasswort(emailAddress: state.emailAddress, password: state.password);
+        .loginWithEmailAndPasswort(
+            emailAddress: state.emailAddress, password: state.password);
 
     emit(state.copyWith(
       isSubmitting: false,

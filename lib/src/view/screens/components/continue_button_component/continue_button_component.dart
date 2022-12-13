@@ -4,8 +4,17 @@ class ContinueButtonComponent extends StatelessWidget {
   final String text;
   final void Function()? onPressed;
   final bool showSpinner;
+  final Color? colorOverWrite;
+  final Color? textColorOverWrite;
 
-  const ContinueButtonComponent({Key? key, required this.text, required this.onPressed, required this.showSpinner}) : super(key: key);
+  const ContinueButtonComponent({
+    Key? key,
+    required this.text,
+    required this.onPressed,
+    required this.showSpinner,
+    this.colorOverWrite,
+    this.textColorOverWrite,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -19,7 +28,7 @@ class ContinueButtonComponent extends StatelessWidget {
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(20),
           ),
-          backgroundColor: themeData.colorScheme.inversePrimary,
+          backgroundColor: this.colorOverWrite ?? themeData.colorScheme.inversePrimary,
         ),
         onPressed: this.onPressed,
         child: showSpinner
@@ -29,6 +38,7 @@ class ContinueButtonComponent extends StatelessWidget {
             : Text(
                 this.text,
                 style: themeData.textTheme.headline5!.copyWith(
+                  color: this.textColorOverWrite,
                   fontSize: 22,
                   fontWeight: FontWeight.w500,
                 ),

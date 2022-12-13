@@ -8,6 +8,7 @@ import '../screens/home/home_screen.dart';
 import '../screens/manager/manager_dashboard.dart';
 import '../screens/manager/manager_home_screen/manager_home_screen.dart';
 
+import '../screens/manager/manager_overview_department_screen/components/manager_department_editor_screen/components/manager__adress_map_screen.dart';
 import '../screens/manager/manager_overview_department_screen/components/manager_department_editor_screen/manager_department_editor_screen.dart';
 import '../screens/manager/manager_overview_department_screen/components/manager_department_details_view/components/manager_edit_department_screen_body.dart';
 import '../screens/manager/manager_overview_department_screen/components/manager_department_details_view/manager_department_details_screen.dart';
@@ -22,6 +23,7 @@ import '../screens/splash/splash_screen.dart';
   AutoRoute(path: "/", page: SplashScreen),
   AutoRoute(path: "login", page: LoginScreen),
   AutoRoute(path: "register", page: RegisterScreen),
+  AutoRoute(path: "adress_edit", page: ManagerAdressMapScreen),
   AutoRoute(path: "home", page: HomeScreen, children: [
     AutoRoute(name: 'ManagerHomeRouter', page: EmptyRouterScreen, children: [
       AutoRoute(path: '', page: ManagerHomeScreen),
