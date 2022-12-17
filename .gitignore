@@ -47,3 +47,4 @@ app.*.map.json
 #generated files
 *.freezed.dart
 *.gr.dart
+/lib/env.dart

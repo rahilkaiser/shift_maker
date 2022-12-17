@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get_it/get_it.dart';
+import 'package:http/http.dart';
 
 import 'application/auth/auth_status_bloc/auth_status_bloc.dart';
 import 'application/auth/login_bloc/login_bloc.dart';
@@ -9,12 +10,15 @@ import 'application/auth/register_bloc/register_bloc.dart';
 import 'application/current_user/current_user_watcher_bloc/current_user_watcher_bloc.dart';
 import 'application/current_user/theme_mode_bloc/theme_mode_bloc.dart';
 import 'application/departments/department_observer_bloc/department_observer_bloc.dart';
+import 'application/departments/places_locator/places_locator_bloc.dart';
 import 'domain/repositories/auth/auth_repository.dart';
 import 'domain/repositories/current_user/current_user_repository.dart';
 import 'domain/repositories/department/department_repository.dart';
+import 'domain/repositories/suggestion/suggestion_repository.dart';
 import 'infrastructure/repositories/auth/auth_repository_impl.dart';
 import 'infrastructure/repositories/current_user_repository_impl/current_user_repository_impl.dart';
 import 'infrastructure/repositories/department/department_repository_impl.dart';
+import 'infrastructure/repositories/suggestion/suggestion_repo_impl.dart';
 
 final serviceLocator = GetIt.instance;
 
@@ -38,9 +42,11 @@ Future<void> registerStateManagementDependencies() async {
 
   //! departments
   serviceLocator.registerFactory(() => DepartmentObserverBloc(departmentRepository: serviceLocator()));
+  serviceLocator.registerFactory(() => PlacesLocatorBloc(suggestionRepository: serviceLocator()));
 }
 
 Future<void> registerRepositoryDependencies() async {
+  serviceLocator.registerLazySingleton<SuggestionRepository>(() => SuggestionRepoImpl(client: serviceLocator()));
   //! departments
   serviceLocator.registerLazySingleton<DepartmentRepository>(() => DepartmentRepositoryImpl(firestore: serviceLocator()));
 
@@ -52,6 +58,9 @@ Future<void> registerRepositoryDependencies() async {
 }
 
 Future<void> registerExtDependencies() async {
+  final client = Client();
+  serviceLocator.registerLazySingleton(() => client);
+
   final firestore = FirebaseFirestore.instance;
   serviceLocator.registerLazySingleton(() => firestore);
 

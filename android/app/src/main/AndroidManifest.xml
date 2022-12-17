@@ -1,5 +1,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
           package="com.example.shift_maker">
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
     <application
             android:label="shift_maker"
             android:name="${applicationName}"
@@ -35,5 +37,9 @@
                 android:name="com.google.android.geo.API_KEY"
                 android:value="AIzaSyD2D6x6yXw5_8Bc7d4AfI04QYmIMOt9eFY"
         />
+        <activity
+            android:name="com.yalantis.ucrop.UCropActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>
     </application>
 </manifest>

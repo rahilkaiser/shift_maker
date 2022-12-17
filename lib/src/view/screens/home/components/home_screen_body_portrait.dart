@@ -46,7 +46,7 @@ class HomeScreenBodyPortrait extends StatelessWidget {
                       return Container(
                         color: Colors.green,
                         height: 40,
-                        child: Text(depart!.label),
+                        child: Text(depart.label),
                       );
                     }
                     return Container();

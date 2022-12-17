@@ -1,16 +1,10 @@
-import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 
 import '../../../../../application/departments/department_observer_bloc/department_observer_bloc.dart';
 import '../../../../../core/theme/sizefit/core_spacing_constants.dart';
-import '../../../../../domain/entities/core/unique_id.dart';
-import '../../../../../domain/entities/department/department_entity.dart';
-import '../../../../routes/router.gr.dart';
 import '../../core/sliver_search_app_bar_component/sliver_search_app_bar_component.dart';
 import '../../core/tweens/custom_rect_tween.dart';
-import 'manager_department_details_view/manager_department_details_screen.dart';
 import 'manager_department_card_component.dart';
 
 class ManagerOverviewDepartmentScreenBody extends StatelessWidget {
@@ -28,7 +22,9 @@ class ManagerOverviewDepartmentScreenBody extends StatelessWidget {
     return CustomScrollView(
       physics: const BouncingScrollPhysics(),
       slivers: [
-        const SliverSearchAppBar(hintText: "Suche Objekte",),
+        const SliverSearchAppBar(
+          hintText: "Suche Objekte",
+        ),
         BlocBuilder<DepartmentObserverBloc, DepartmentObserverState>(
           builder: (context, state) {
             if (state is DepartmentObserverSuccessState) {

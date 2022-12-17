@@ -6,6 +6,7 @@ import 'package:auto_route/auto_route.dart';
 import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 
 import '../../../../../../core/theme/sizefit/core_spacing_constants.dart';
@@ -35,6 +36,7 @@ class _ManagerDepartmentEditorScreenState extends State<ManagerDepartmentEditorS
 
   late TextEditingController titleController;
   late TextEditingController descriptionController;
+  late TextEditingController addressController;
 
   bool fromDateSelected = false;
   bool untilDateSelected = false;
@@ -54,6 +56,7 @@ class _ManagerDepartmentEditorScreenState extends State<ManagerDepartmentEditorS
     this.animaListKey.currentState?.insertItem(0);
     this.titleController = TextEditingController(text: widget.departmentEntity?.label ?? "");
     this.descriptionController = TextEditingController(text: widget.departmentEntity?.description ?? "");
+    this.addressController = TextEditingController(text: "");
 
     this.fromDateController = TextEditingController(text: this.getFromDateTextValue());
     this.untilDateController = TextEditingController(text: this.getUntilDateTextValue());
@@ -61,11 +64,32 @@ class _ManagerDepartmentEditorScreenState extends State<ManagerDepartmentEditorS
     super.initState();
   }
 
+  Future<void> _cropImage(BuildContext context, int imgIndex) async {
+    ThemeData themeData = Theme.of(context);
+
+    CroppedFile? cropped = await ImageCropper().cropImage(sourcePath: this.imgFileList[imgIndex].path, uiSettings: [
+      AndroidUiSettings(
+          toolbarTitle: 'Bild bearbeiten',
+          statusBarColor: themeData.colorScheme.inversePrimary,
+          activeControlsWidgetColor: themeData.colorScheme.primary,
+          backgroundColor: themeData.colorScheme.surface,
+          toolbarColor: themeData.colorScheme.surface,
+          toolbarWidgetColor: themeData.colorScheme.secondary,
+          initAspectRatio: CropAspectRatioPreset.original,
+          lockAspectRatio: false),
+    ]);
+
+    if (cropped != null) {
+      setState(() {
+        this.imgFileList[imgIndex] = File(cropped.path);
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final themeData = Theme.of(context);
     Size size = MediaQuery.of(context).size;
-
     return Scaffold(
       body: SingleChildScrollView(
         physics: const BouncingScrollPhysics(),
@@ -95,50 +119,52 @@ class _ManagerDepartmentEditorScreenState extends State<ManagerDepartmentEditorS
                                 dashPattern: const [8, 4],
                                 child: InkWell(
                                   onTap: () async {
-                                    showDialog(
-                                      builder: (context) {
-                                        return BackdropFilter(
-                                          filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
-                                          child: PageView.builder(
-                                            pageSnapping: true,
-                                            itemCount: this.imgFileList.length,
-                                            itemBuilder: (context, index) {
-                                              return Stack(
-                                                children: [
-                                                  GestureDetector(
-                                                    onTap: () {
-                                                      Navigator.pop(context);
-                                                    },
-                                                  ),
-                                                  Center(
-                                                    child: Padding(
-                                                      padding: const EdgeInsets.all(8.0),
-                                                      child: Image.file(
-                                                        this.imgFileList[index],
-                                                        fit: BoxFit.contain,
-                                                      ),
-                                                    ),
-                                                  ),
-                                                  Align(
-                                                    alignment: Alignment.bottomRight,
-                                                    child: ElevatedButton(
-                                                      onPressed: () {},
-                                                      child: Row(
-                                                        children: const [
-                                                          Text("Entfernen"),
-                                                          Icon(Icons.delete),
-                                                        ],
-                                                      ),
-                                                    ),
-                                                  )
-                                                ],
-                                              );
-                                            },
-                                          ),
-                                        );
-                                      },
-                                      context: context,
-                                    );
+                                    await this._cropImage(context, index);
+
+                                    // showDialog(
+                                    //   builder: (context) {
+                                    //     return BackdropFilter(
+                                    //       filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+                                    //       child: PageView.builder(
+                                    //         pageSnapping: true,
+                                    //         itemCount: this.imgFileList.length,
+                                    //         itemBuilder: (context, index) {
+                                    //           return Stack(
+                                    //             children: [
+                                    //               GestureDetector(
+                                    //                 onTap: () {
+                                    //                   Navigator.pop(context);
+                                    //                 },
+                                    //               ),
+                                    //               Center(
+                                    //                 child: Padding(
+                                    //                   padding: const EdgeInsets.all(8.0),
+                                    //                   child: Image.file(
+                                    //                     this.imgFileList[index],
+                                    //                     fit: BoxFit.contain,
+                                    //                   ),
+                                    //                 ),
+                                    //               ),
+                                    //               Align(
+                                    //                 alignment: Alignment.bottomRight,
+                                    //                 child: ElevatedButton(
+                                    //                   onPressed: () {},
+                                    //                   child: Row(
+                                    //                     children: const [
+                                    //                       Text("Entfernen"),
+                                    //                       Icon(Icons.delete),
+                                    //                     ],
+                                    //                   ),
+                                    //                 ),
+                                    //               )
+                                    //             ],
+                                    //           );
+                                    //         },
+                                    //       ),
+                                    //     );
+                                    //   },
+                                    //   context: context,
+                                    // );
                                   },
                                   child: SizedBox(
                                     height: double.maxFinite,
@@ -325,12 +351,14 @@ class _ManagerDepartmentEditorScreenState extends State<ManagerDepartmentEditorS
                   ),
                   InkWell(
                     onTap: () {
-                      //TODO: dialog mit Adresse-auswahl
-                      AutoRouter.of(context).push(const ManagerAdressMapRoute());
+                      AutoRouter.of(context).push(ManagerAdressMapRoute(controller: this.addressController));
                     },
                     child: TextField(
+                      style: themeData.textTheme.headline6?.copyWith(
+                        fontSize: 12,
+                      ),
                       enabled: false,
-                      controller: titleController,
+                      controller: this.addressController,
                       decoration: InputDecoration(
                         suffixIcon: Icon(
                           Icons.keyboard_arrow_right,
@@ -353,6 +381,9 @@ class _ManagerDepartmentEditorScreenState extends State<ManagerDepartmentEditorS
                 onPressed: () {},
                 text: "Speichern",
                 showSpinner: false,
+              ),
+              const SizedBox(
+                height: 25,
               ),
             ],
           ),
