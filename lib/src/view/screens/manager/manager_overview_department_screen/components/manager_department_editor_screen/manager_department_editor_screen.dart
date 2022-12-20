@@ -6,6 +6,7 @@ import 'package:auto_route/auto_route.dart';
 import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 
@@ -40,10 +41,11 @@ class _ManagerDepartmentEditorScreenState extends State<ManagerDepartmentEditorS
 
   bool fromDateSelected = false;
   bool untilDateSelected = false;
-  DateTime fromDate = DateTime.now();
+  DateTime? fromDate = DateTime.now();
   DateTime? untilDate;
   late TextEditingController fromDateController;
   late TextEditingController untilDateController;
+
 
   @override
   void initState() {
@@ -53,14 +55,30 @@ class _ManagerDepartmentEditorScreenState extends State<ManagerDepartmentEditorS
       });
     });
 
+
     this.animaListKey.currentState?.insertItem(0);
     this.titleController = TextEditingController(text: widget.departmentEntity?.label ?? "");
     this.descriptionController = TextEditingController(text: widget.departmentEntity?.description ?? "");
-    this.addressController = TextEditingController(text: "");
+    this.addressController = TextEditingController(text: widget.departmentEntity?.address ?? "");
 
-    this.fromDateController = TextEditingController(text: this.getFromDateTextValue());
-    this.untilDateController = TextEditingController(text: this.getUntilDateTextValue());
+    if (widget.departmentEntity != null) {
+      if (widget.departmentEntity?.begin != null) {
+        this.fromDate = widget.departmentEntity?.begin;
+        this.fromDateSelected = true;
+      }
+      if (widget.departmentEntity?.end != null) {
+        this.untilDate = widget.departmentEntity?.end;
+        this.untilDateSelected = true;
+      }
+    }
 
+    setState(() {
+      this.fromDateController = TextEditingController(text: this.getFromDateTextValue());
+      this.untilDateController = TextEditingController(text: this.getUntilDateTextValue());
+    });
+
+
+    this._downloadAndLoadImagesFromCache();
     super.initState();
   }
 
@@ -84,6 +102,12 @@ class _ManagerDepartmentEditorScreenState extends State<ManagerDepartmentEditorS
         this.imgFileList[imgIndex] = File(cropped.path);
       });
     }
+  }
+
+  @override
+  void dispose() {
+    DefaultCacheManager().emptyCache();
+    super.dispose();
   }
 
   @override
@@ -120,51 +144,6 @@ class _ManagerDepartmentEditorScreenState extends State<ManagerDepartmentEditorS
                                 child: InkWell(
                                   onTap: () async {
                                     await this._cropImage(context, index);
-
-                                    // showDialog(
-                                    //   builder: (context) {
-                                    //     return BackdropFilter(
-                                    //       filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
-                                    //       child: PageView.builder(
-                                    //         pageSnapping: true,
-                                    //         itemCount: this.imgFileList.length,
-                                    //         itemBuilder: (context, index) {
-                                    //           return Stack(
-                                    //             children: [
-                                    //               GestureDetector(
-                                    //                 onTap: () {
-                                    //                   Navigator.pop(context);
-                                    //                 },
-                                    //               ),
-                                    //               Center(
-                                    //                 child: Padding(
-                                    //                   padding: const EdgeInsets.all(8.0),
-                                    //                   child: Image.file(
-                                    //                     this.imgFileList[index],
-                                    //                     fit: BoxFit.contain,
-                                    //                   ),
-                                    //                 ),
-                                    //               ),
-                                    //               Align(
-                                    //                 alignment: Alignment.bottomRight,
-                                    //                 child: ElevatedButton(
-                                    //                   onPressed: () {},
-                                    //                   child: Row(
-                                    //                     children: const [
-                                    //                       Text("Entfernen"),
-                                    //                       Icon(Icons.delete),
-                                    //                     ],
-                                    //                   ),
-                                    //                 ),
-                                    //               )
-                                    //             ],
-                                    //           );
-                                    //         },
-                                    //       ),
-                                    //     );
-                                    //   },
-                                    //   context: context,
-                                    // );
                                   },
                                   child: SizedBox(
                                     height: double.maxFinite,
@@ -268,7 +247,7 @@ class _ManagerDepartmentEditorScreenState extends State<ManagerDepartmentEditorS
                             DateTime? newFromDate = await showDatePicker(
                               locale: Locale("de"),
                               context: context,
-                              initialDate: this.fromDate,
+                              initialDate: this.fromDate ?? DateTime.now(),
                               firstDate: DateTime.now(),
                               lastDate: this.untilDate ?? DateTime(2300),
                             );
@@ -305,8 +284,8 @@ class _ManagerDepartmentEditorScreenState extends State<ManagerDepartmentEditorS
                             DateTime? newUntilDate = await showDatePicker(
                               locale: Locale("de"),
                               context: context,
-                              initialDate: this.fromDate,
-                              firstDate: this.fromDate,
+                              initialDate: this.untilDate ?? this.fromDate!,
+                              firstDate: this.fromDate!,
                               lastDate: DateTime(2300),
                             );
                             if (newUntilDate == null) return;
@@ -393,11 +372,33 @@ class _ManagerDepartmentEditorScreenState extends State<ManagerDepartmentEditorS
   }
 
   String getFromDateTextValue() {
-    return fromDateSelected ? '${fromDate.day}.${fromDate.month}.${fromDate.year}' : "Beliebig";
+    return fromDateSelected ? '${fromDate?.day}.${fromDate?.month}.${fromDate?.year}' : "Beliebig";
   }
 
   String getUntilDateTextValue() {
     return untilDateSelected && untilDate != null ? '${untilDate?.day}.${untilDate?.month}.${untilDate?.year}' : "Beliebig";
+  }
+
+  _downloadAndLoadImagesFromCache() async {
+    if (widget.departmentEntity != null) {
+      List<File> loadedFiles = [];
+
+      int len = widget.departmentEntity?.images.length as int;
+
+      for (int i = 0; i < len; i++) {
+        loadedFiles.add(await DefaultCacheManager().getSingleFile(widget.departmentEntity?.images[i] as String));
+        print("JJJ");
+        print(loadedFiles.length);
+      }
+      int lastIndex = imgFileList.length;
+      setState(() {
+        imgFileList.insertAll(lastIndex, loadedFiles);
+      });
+
+      for (int offset = 0; offset < loadedFiles.length; offset++) {
+        animaListKey.currentState?.insertItem(lastIndex + offset);
+      }
+    }
   }
 
   _openGallery() async {

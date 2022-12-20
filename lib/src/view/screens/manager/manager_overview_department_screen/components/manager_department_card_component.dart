@@ -1,6 +1,7 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:transparent_image/transparent_image.dart';
 
 import '../../../../../application/core/is_editable_bloc/is_editable_bloc.dart';
 import '../../../../../application/departments/selected_department_bloc/selected_department_bloc.dart';
@@ -50,10 +51,24 @@ class ManagerDepartmentCardComponent extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  Image.asset(
-                    "assets/images/bgTest.jpg",
-                    height: 130,
-                    fit: BoxFit.cover,
+                  Expanded(
+                    child: Stack(
+                      fit: StackFit.passthrough,
+                      children: [
+                        const Center(child: CircularProgressIndicator()),
+                        ClipRRect(
+                          borderRadius: BorderRadius.vertical(top: Radius.circular(10)),
+                          child: FadeInImage.memoryNetwork(
+                            fadeInDuration: const Duration(milliseconds: 200),
+                            image: department.images.isNotEmpty
+                                ? department.images[0]
+                                : "https://firebasestorage.googleapis.com/v0/b/shiftmaker-d0904.appspot.com/o/VinceTest.jpg?alt=media&token=dd081341-2fec-4dd8-afdc-1b699b8481fd",
+                            fit: BoxFit.cover,
+                            placeholder: kTransparentImage,
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                   // Label
                   Flexible(

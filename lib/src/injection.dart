@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:get_it/get_it.dart';
 import 'package:http/http.dart';
 
@@ -48,7 +49,10 @@ Future<void> registerStateManagementDependencies() async {
 Future<void> registerRepositoryDependencies() async {
   serviceLocator.registerLazySingleton<SuggestionRepository>(() => SuggestionRepoImpl(client: serviceLocator()));
   //! departments
-  serviceLocator.registerLazySingleton<DepartmentRepository>(() => DepartmentRepositoryImpl(firestore: serviceLocator()));
+  serviceLocator.registerLazySingleton<DepartmentRepository>(() => DepartmentRepositoryImpl(
+        firestore: serviceLocator(),
+        firebaseStorage: serviceLocator(),
+      ));
 
   //! curr_user
   serviceLocator.registerLazySingleton<CurrentUserRepository>(() => CurrentUserRepositoryImpl(firestore: serviceLocator()));
@@ -60,6 +64,9 @@ Future<void> registerRepositoryDependencies() async {
 Future<void> registerExtDependencies() async {
   final client = Client();
   serviceLocator.registerLazySingleton(() => client);
+
+  final firebaseStorage = FirebaseStorage.instance;
+  serviceLocator.registerLazySingleton(() => firebaseStorage);
 
   final firestore = FirebaseFirestore.instance;
   serviceLocator.registerLazySingleton(() => firestore);

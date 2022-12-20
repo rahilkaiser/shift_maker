@@ -42,11 +42,12 @@ class DepartmentObserverBloc extends Bloc<DepartmentObserverEvent, DepartmentObs
     event.failureOrDepart.fold(
       (failure) => emit(DepartmentObserverFailureState(departmentFailure: failure)),
       (departs) {
-        List<DepartmentEntity> depTest = [];
-        for (int i = 0; i < 10; i++) {
-          depTest.add(departs[0]);
-        }
-
+        // List<DepartmentEntity> depTest = [];
+        // for (int i = 0; i < 10; i++) {
+        //   depTest.add(departs[0]);
+        // }
+        print("JNJNJN");
+        print(departs);
         return emit(DepartmentObserverSuccessState(departmentEntities: departs));
       },
     );

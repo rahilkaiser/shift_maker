@@ -1,9 +1,11 @@
 import 'package:auto_route/auto_route.dart';
+import 'package:intl/intl.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:maps_launcher/maps_launcher.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
+import 'package:transparent_image/transparent_image.dart';
 
 import '../../../../../../../application/core/is_editable_bloc/is_editable_bloc.dart';
 import '../../../../../../../core/theme/sizefit/core_spacing_constants.dart';
@@ -34,13 +36,6 @@ class _ManagerEditDepartmentScreenBodyState extends State<ManagerEditDepartmentS
     final themeData = Theme.of(context);
     Size size = MediaQuery.of(context).size;
 
-    List<String> images = [
-      "assets/images/bgTest.jpg",
-      "assets/images/bgTest.jpg",
-      "assets/images/bgTest.jpg",
-      "assets/images/bgTest.jpg",
-    ];
-
     return SingleChildScrollView(
       physics: const BouncingScrollPhysics(),
       child: Padding(
@@ -57,17 +52,17 @@ class _ManagerEditDepartmentScreenBodyState extends State<ManagerEditDepartmentS
                     this.currentPageIndex = value;
                   });
                 },
-                itemCount: images.length,
+                itemCount: widget.departmentEntity.images.length,
                 itemBuilder: (context, index) {
                   return Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 8),
-                    child: InkWell(
+                    child: GestureDetector(
                       onTap: () {
                         FocusScope.of(context).unfocus();
                         showDialog(
                           builder: (context) {
                             return PageView.builder(
-                              itemCount: images.length,
+                              itemCount: widget.departmentEntity.images.length,
                               itemBuilder: (context, index) {
                                 return Stack(
                                   children: [
@@ -79,8 +74,8 @@ class _ManagerEditDepartmentScreenBodyState extends State<ManagerEditDepartmentS
                                     Center(
                                       child: Padding(
                                         padding: const EdgeInsets.all(8.0),
-                                        child: Image.asset(
-                                          images[index],
+                                        child: Image.network(
+                                          widget.departmentEntity.images[index],
                                           fit: BoxFit.contain,
                                         ),
                                       ),
@@ -93,12 +88,22 @@ class _ManagerEditDepartmentScreenBodyState extends State<ManagerEditDepartmentS
                           context: context,
                         );
                       },
-                      child: ClipRRect(
-                        borderRadius: BorderRadius.circular(10),
-                        child: Image.asset(
-                          images[index],
-                          fit: BoxFit.cover,
-                        ),
+                      child: Stack(
+                        fit: StackFit.passthrough,
+                        children: [
+                          const Center(child: CircularProgressIndicator()),
+                          Center(
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(10),
+                              child: FadeInImage.memoryNetwork(
+                                fadeInDuration: const Duration(milliseconds: 200),
+                                image: widget.departmentEntity.images[index],
+                                fit: BoxFit.cover,
+                                placeholder: kTransparentImage,
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
                     ),
                   );
@@ -111,7 +116,7 @@ class _ManagerEditDepartmentScreenBodyState extends State<ManagerEditDepartmentS
             Center(
               child: AnimatedSmoothIndicator(
                 activeIndex: this.currentPageIndex,
-                count: images.length,
+                count: widget.departmentEntity.images.length,
                 effect: ScrollingDotsEffect(
                   activeDotColor: themeData.colorScheme.inversePrimary,
                   dotColor: themeData.colorScheme.onBackground.withOpacity(0.6),
@@ -174,7 +179,9 @@ class _ManagerEditDepartmentScreenBodyState extends State<ManagerEditDepartmentS
                       overflow: TextOverflow.ellipsis,
                       maxLines: 2,
                       text: TextSpan(
-                        text: "19.03.2022",
+                        text: widget.departmentEntity.begin != null
+                            ? DateFormat('dd.MM.yyyy').format(widget.departmentEntity.begin!).toString()
+                            : "Beliebig",
                         style: TextStyle(
                           fontSize: 15,
                           color: themeData.colorScheme.secondary,
@@ -201,7 +208,9 @@ class _ManagerEditDepartmentScreenBodyState extends State<ManagerEditDepartmentS
                       overflow: TextOverflow.ellipsis,
                       maxLines: 2,
                       text: TextSpan(
-                        text: "19.09.2022",
+                        text: widget.departmentEntity.end != null
+                            ? DateFormat('dd.MM.yyyy').format(widget.departmentEntity.end!).toString()
+                            : "Beliebig",
                         style: TextStyle(
                           fontSize: 15,
                           color: themeData.colorScheme.secondary,
@@ -219,18 +228,20 @@ class _ManagerEditDepartmentScreenBodyState extends State<ManagerEditDepartmentS
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 const Icon(Icons.location_on_outlined, size: 15),
-                const SizedBox(width: 1),
-                RichText(
-                  overflow: TextOverflow.ellipsis,
-                  maxLines: 1,
-                  text: TextSpan(
-                    text: "Prinz-Heinrich-Straße 7A , 12307 Berlin",
-                    style: themeData.textTheme.headline5?.copyWith(fontSize: 15, fontWeight: FontWeight.w300),
+                const SizedBox(width: 8),
+                Expanded(
+                  child: RichText(
+                    overflow: TextOverflow.ellipsis,
+                    maxLines: 1,
+                    text: TextSpan(
+                      text: widget.departmentEntity.address,
+                      style: themeData.textTheme.headline5?.copyWith(fontSize: 15, fontWeight: FontWeight.w300),
+                    ),
                   ),
                 ),
                 IconButton(
                   // color: themeData.colorScheme.primary,
-                  onPressed: () => MapsLauncher.launchQuery('Prinz-Heinrich-Straße 7A, Berlin, 12307, Deutschland'),
+                  onPressed: () => MapsLauncher.launchQuery(widget.departmentEntity.address),
                   icon: Icon(
                     Icons.gps_fixed_sharp,
                     color: themeData.colorScheme.primary,
@@ -247,7 +258,6 @@ class _ManagerEditDepartmentScreenBodyState extends State<ManagerEditDepartmentS
             GestureDetector(
               onTap: () {
                 //TODO: Dienstplan
-                print("Diensplab");
               },
               child: SizedBox(
                 width: double.maxFinite,

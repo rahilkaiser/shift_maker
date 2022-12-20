@@ -10,11 +10,19 @@ class DepartmentEntity with _$DepartmentEntity {
     required UniqueId id,
     required String label,
     required String description,
+    required String address,
+    required DateTime? begin,
+    required DateTime? end,
+    required List<String> images,
   }) = _DepartmentEntity;
 
   factory DepartmentEntity.empty() => DepartmentEntity(
     id: UniqueId(),
     label: "",
     description: "",
+    address: "",
+    begin: null,
+    end: null,
+    images: [],
   );
 }
