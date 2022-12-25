@@ -6,12 +6,16 @@ import 'package:auto_route/auto_route.dart';
 import 'package:dotted_border/dotted_border.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 
+import '../../../../../../application/departments/departments_controller_bloc/departments_controller_bloc.dart';
 import '../../../../../../core/theme/sizefit/core_spacing_constants.dart';
+import '../../../../../../domain/entities/core/unique_id.dart';
 import '../../../../../../domain/entities/department/department_entity.dart';
+import '../../../../../../injection.dart';
 import '../../../../../routes/router.gr.dart';
 import '../../../../components/continue_button_component/continue_button_component.dart';
 import 'components/manager__adress_map_screen.dart';
@@ -32,6 +36,7 @@ class _ManagerDepartmentEditorScreenState extends State<ManagerDepartmentEditorS
   final GlobalKey<AnimatedListState> animaListKey = GlobalKey<AnimatedListState>();
 
   List<File> imgFileList = [];
+  List<File> initialImgFileList = [];
   PageController _controller = PageController(initialPage: 0, keepPage: false);
   double currentIndex = 0;
 
@@ -46,7 +51,6 @@ class _ManagerDepartmentEditorScreenState extends State<ManagerDepartmentEditorS
   late TextEditingController fromDateController;
   late TextEditingController untilDateController;
 
-
   @override
   void initState() {
     _controller.addListener(() {
@@ -54,7 +58,6 @@ class _ManagerDepartmentEditorScreenState extends State<ManagerDepartmentEditorS
         currentIndex = _controller.page!;
       });
     });
-
 
     this.animaListKey.currentState?.insertItem(0);
     this.titleController = TextEditingController(text: widget.departmentEntity?.label ?? "");
@@ -76,7 +79,6 @@ class _ManagerDepartmentEditorScreenState extends State<ManagerDepartmentEditorS
       this.fromDateController = TextEditingController(text: this.getFromDateTextValue());
       this.untilDateController = TextEditingController(text: this.getUntilDateTextValue());
     });
-
 
     this._downloadAndLoadImagesFromCache();
     super.initState();
@@ -115,256 +117,315 @@ class _ManagerDepartmentEditorScreenState extends State<ManagerDepartmentEditorS
     final themeData = Theme.of(context);
     Size size = MediaQuery.of(context).size;
     return Scaffold(
-      body: SingleChildScrollView(
-        physics: const BouncingScrollPhysics(),
-        child: Padding(
-          padding: CoreSpacingConstants.getCoreBodyContentPaddingHorizontal(size),
-          child: Column(
-            children: [
-              const SizedBox(
-                height: 8,
-              ),
-              SizedBox(
-                width: size.width,
-                height: size.width / 2,
-                child: PageView.builder(
-                  controller: this._controller,
-                  physics: const BouncingScrollPhysics(),
-                  itemCount: this.imgFileList.length + 1,
-                  itemBuilder: (context, index) {
-                    return index < this.imgFileList.length
-                        ? Card(
-                            elevation: 4,
-                            child: Padding(
-                              padding: const EdgeInsets.all(12.0),
-                              child: DottedBorder(
-                                color: themeData.colorScheme.secondary,
-                                strokeWidth: 2,
-                                dashPattern: const [8, 4],
-                                child: InkWell(
-                                  onTap: () async {
-                                    await this._cropImage(context, index);
-                                  },
-                                  child: SizedBox(
-                                    height: double.maxFinite,
-                                    width: double.maxFinite,
-                                    child: Image.file(
-                                      this.imgFileList[index],
-                                      fit: BoxFit.cover,
+      body: BlocProvider<DepartmentsControllerBloc>(
+        create: (context) => serviceLocator<DepartmentsControllerBloc>(),
+        child: SingleChildScrollView(
+          physics: const BouncingScrollPhysics(),
+          child: BlocConsumer<DepartmentsControllerBloc, DepartmentsControllerState>(
+            listener: (context, state) {
+              if (state.failureOrSuccessOption.isSome()) {
+                AutoRouter.of(context).popUntil((route) => route.settings.name == ManagerOverviewDepartmentRoute.name);
+              }
+            },
+            builder: (context, state) {
+              return Padding(
+                padding: CoreSpacingConstants.getCoreBodyContentPaddingHorizontal(size),
+                child: Column(
+                  children: [
+                    const SizedBox(
+                      height: 8,
+                    ),
+                    SizedBox(
+                      width: size.width,
+                      height: size.width / 2,
+                      child: PageView.builder(
+                        controller: this._controller,
+                        physics: const BouncingScrollPhysics(),
+                        itemCount: this.imgFileList.length + 1,
+                        itemBuilder: (context, index) {
+                          return index < this.imgFileList.length
+                              ? Card(
+                                  elevation: 4,
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(12.0),
+                                    child: DottedBorder(
+                                      color: themeData.colorScheme.secondary,
+                                      strokeWidth: 2,
+                                      dashPattern: const [8, 4],
+                                      child: InkWell(
+                                        onTap: () async {
+                                          await this._cropImage(context, index);
+                                        },
+                                        child: SizedBox(
+                                          height: double.maxFinite,
+                                          width: double.maxFinite,
+                                          child: Image.file(
+                                            this.imgFileList[index],
+                                            fit: BoxFit.cover,
+                                          ),
+                                        ),
+                                      ),
                                     ),
                                   ),
-                                ),
-                              ),
-                            ),
-                          )
-                        : Card(
-                            elevation: 4,
-                            child: Padding(
-                              padding: const EdgeInsets.all(12.0),
-                              child: DottedBorder(
-                                color: themeData.colorScheme.secondary,
-                                strokeWidth: 2,
-                                dashPattern: const [8, 4],
-                                child: InkWell(
-                                  onTap: () async {
-                                    await this._showImageSelectionChoiceDialog(context);
-                                  },
-                                  child: SizedBox(
-                                    height: double.maxFinite,
-                                    width: double.maxFinite,
-                                    child: Column(
-                                      mainAxisAlignment: MainAxisAlignment.center,
-                                      crossAxisAlignment: CrossAxisAlignment.center,
-                                      children: const [
-                                        Icon(
-                                          Icons.upload,
+                                )
+                              : Card(
+                                  elevation: 4,
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(12.0),
+                                    child: DottedBorder(
+                                      color: themeData.colorScheme.secondary,
+                                      strokeWidth: 2,
+                                      dashPattern: const [8, 4],
+                                      child: InkWell(
+                                        onTap: () async {
+                                          await this._showImageSelectionChoiceDialog(context);
+                                        },
+                                        child: SizedBox(
+                                          height: double.maxFinite,
+                                          width: double.maxFinite,
+                                          child: Column(
+                                            mainAxisAlignment: MainAxisAlignment.center,
+                                            crossAxisAlignment: CrossAxisAlignment.center,
+                                            children: const [
+                                              Icon(
+                                                Icons.upload,
+                                              ),
+                                              SizedBox(
+                                                height: 8,
+                                              ),
+                                              Text("Upload your images"),
+                                            ],
+                                          ),
                                         ),
-                                        SizedBox(
-                                          height: 8,
-                                        ),
-                                        Text("Upload your images"),
-                                      ],
+                                      ),
                                     ),
                                   ),
-                                ),
-                              ),
-                            ),
-                          );
-                  },
-                ),
-              ),
-              SizedBox(
-                // width: size.width,
-                height: size.width / 5.5,
-                child: buildAnimatedList(size, themeData),
-              ),
-              const SizedBox(
-                height: 25,
-              ),
-              TextField(
-                controller: titleController,
-                decoration: InputDecoration(
-                  labelText: "Titel",
-                  helperText: "Geben Sie hier einen Titel ein",
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(5),
-                  ),
-                ),
-              ),
-              const SizedBox(
-                height: 25,
-              ),
-              TextField(
-                minLines: 3,
-                maxLines: 8,
-                controller: descriptionController,
-                decoration: InputDecoration(
-                  labelText: "Beschreibung",
-                  helperText: "Geben Sie hier eine Beschreibung ein",
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(5),
-                  ),
-                ),
-              ),
-              const SizedBox(
-                height: 25,
-              ),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    "Objekt-Zeitraum festlegen",
-                    style: themeData.textTheme.headline6,
-                  ),
-                  SizedBox(
-                    height: 18,
-                  ),
-                  Row(
-                    children: [
-                      Expanded(
-                        child: InkWell(
-                          onTap: () async {
-                            DateTime? newFromDate = await showDatePicker(
-                              locale: Locale("de"),
-                              context: context,
-                              initialDate: this.fromDate ?? DateTime.now(),
-                              firstDate: DateTime.now(),
-                              lastDate: this.untilDate ?? DateTime(2300),
-                            );
-                            if (newFromDate == null) return;
-
-                            setState(() {
-                              fromDateSelected = true;
-                              this.fromDate = newFromDate;
-                              this.fromDateController.text = this.getFromDateTextValue();
-                            });
-                          },
-                          child: TextField(
-                            controller: this.fromDateController,
-                            textAlign: TextAlign.center,
-                            autofocus: true,
-                            focusNode: FocusNode(),
-                            enabled: false,
-                            decoration: InputDecoration(
-                              labelStyle: TextStyle(color: themeData.colorScheme.primary),
-                              labelText: "Beginn",
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(5),
-                              ),
-                            ),
-                          ),
-                        ),
+                                );
+                        },
                       ),
-                      const SizedBox(
-                        width: 8,
-                      ),
-                      Expanded(
-                        child: InkWell(
-                          onTap: () async {
-                            DateTime? newUntilDate = await showDatePicker(
-                              locale: Locale("de"),
-                              context: context,
-                              initialDate: this.untilDate ?? this.fromDate!,
-                              firstDate: this.fromDate!,
-                              lastDate: DateTime(2300),
-                            );
-                            if (newUntilDate == null) return;
-
-                            setState(() {
-                              this.untilDateSelected = true;
-                              this.untilDate = newUntilDate;
-                              this.untilDateController.text = this.getUntilDateTextValue();
-                            });
-                          },
-                          child: TextField(
-                            controller: untilDateController,
-                            textAlign: TextAlign.center,
-                            autofocus: true,
-                            enabled: false,
-                            decoration: InputDecoration(
-                              labelStyle: TextStyle(color: themeData.colorScheme.primary),
-                              labelText: "Ende",
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(5),
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-              const SizedBox(
-                height: 25,
-              ),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    "Adresse festlegen",
-                    style: themeData.textTheme.headline6,
-                  ),
-                  SizedBox(
-                    height: 18,
-                  ),
-                  InkWell(
-                    onTap: () {
-                      AutoRouter.of(context).push(ManagerAdressMapRoute(controller: this.addressController));
-                    },
-                    child: TextField(
-                      style: themeData.textTheme.headline6?.copyWith(
-                        fontSize: 12,
-                      ),
-                      enabled: false,
-                      controller: this.addressController,
+                    ),
+                    SizedBox(
+                      // width: size.width,
+                      height: size.width / 5.5,
+                      child: buildAnimatedList(size, themeData),
+                    ),
+                    const SizedBox(
+                      height: 25,
+                    ),
+                    TextField(
+                      controller: titleController,
                       decoration: InputDecoration(
-                        suffixIcon: Icon(
-                          Icons.keyboard_arrow_right,
-                          color: themeData.colorScheme.primary,
-                        ),
-                        labelText: "Adresse",
-                        labelStyle: TextStyle(color: themeData.colorScheme.primary),
+                        labelText: "Titel",
+                        helperText: "Geben Sie hier einen Titel ein",
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(5),
                         ),
                       ),
                     ),
-                  ),
-                ],
-              ),
-              const SizedBox(
-                height: 25,
-              ),
-              ContinueButtonComponent(
-                onPressed: () {},
-                text: "Speichern",
-                showSpinner: false,
-              ),
-              const SizedBox(
-                height: 25,
-              ),
-            ],
+                    const SizedBox(
+                      height: 25,
+                    ),
+                    TextField(
+                      minLines: 3,
+                      maxLines: 8,
+                      controller: descriptionController,
+                      decoration: InputDecoration(
+                        labelText: "Beschreibung",
+                        helperText: "Geben Sie hier eine Beschreibung ein",
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(5),
+                        ),
+                      ),
+                    ),
+                    const SizedBox(
+                      height: 25,
+                    ),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          "Objekt-Zeitraum festlegen",
+                          style: themeData.textTheme.headline6,
+                        ),
+                        SizedBox(
+                          height: 18,
+                        ),
+                        Row(
+                          children: [
+                            Expanded(
+                              child: InkWell(
+                                onTap: () async {
+                                  FocusScope.of(context).unfocus();
+                                  DateTime? newFromDate = await showDatePicker(
+                                    locale: Locale("de"),
+                                    context: context,
+                                    initialDate: this.fromDate ?? DateTime.now(),
+                                    firstDate: DateTime.now(),
+                                    lastDate: this.untilDate ?? DateTime(2300),
+                                  );
+                                  if (newFromDate == null) return;
+
+                                  setState(() {
+                                    fromDateSelected = true;
+                                    this.fromDate = newFromDate;
+                                    this.fromDateController.text = this.getFromDateTextValue();
+                                  });
+                                },
+                                child: TextField(
+                                  controller: this.fromDateController,
+                                  textAlign: TextAlign.center,
+                                  autofocus: true,
+                                  focusNode: FocusNode(),
+                                  enabled: false,
+                                  decoration: InputDecoration(
+                                    labelStyle: TextStyle(color: themeData.colorScheme.primary),
+                                    labelText: "Beginn",
+                                    border: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(5),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                            const SizedBox(
+                              width: 8,
+                            ),
+                            Expanded(
+                              child: InkWell(
+                                onTap: () async {
+                                  FocusScope.of(context).unfocus();
+                                  DateTime? newUntilDate = await showDatePicker(
+                                    locale: Locale("de"),
+                                    context: context,
+                                    initialDate: this.untilDate ?? this.fromDate!,
+                                    firstDate: this.fromDate!,
+                                    lastDate: DateTime(2300),
+                                  );
+                                  if (newUntilDate == null) return;
+
+                                  setState(() {
+                                    this.untilDateSelected = true;
+                                    this.untilDate = newUntilDate;
+                                    this.untilDateController.text = this.getUntilDateTextValue();
+                                  });
+                                },
+                                child: TextField(
+                                  controller: untilDateController,
+                                  textAlign: TextAlign.center,
+                                  autofocus: true,
+                                  enabled: false,
+                                  decoration: InputDecoration(
+                                    labelStyle: TextStyle(color: themeData.colorScheme.primary),
+                                    labelText: "Ende",
+                                    border: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(5),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                    const SizedBox(
+                      height: 25,
+                    ),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          "Adresse festlegen",
+                          style: themeData.textTheme.headline6,
+                        ),
+                        SizedBox(
+                          height: 18,
+                        ),
+                        InkWell(
+                          onTap: () {
+                            FocusScope.of(context).unfocus();
+                            AutoRouter.of(context).push(ManagerAdressMapRoute(controller: this.addressController));
+                          },
+                          child: TextField(
+                            style: themeData.textTheme.headline6?.copyWith(
+                              fontSize: 12,
+                            ),
+                            enabled: false,
+                            controller: this.addressController,
+                            decoration: InputDecoration(
+                              suffixIcon: Icon(
+                                Icons.keyboard_arrow_right,
+                                color: themeData.colorScheme.primary,
+                              ),
+                              labelText: "Adresse",
+                              labelStyle: TextStyle(color: themeData.colorScheme.primary),
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(5),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(
+                      height: 25,
+                    ),
+                    ContinueButtonComponent(
+                      onPressed: () {
+                        // bool imagesWereChanged = false;
+                        //
+                        // if (this.initialImgFileList.length != this.imgFileList.length || this.imgFileList.isEmpty) {
+                        //   imagesWereChanged = true;
+                        // } else {
+                        //   for (int i = 0; i < this.initialImgFileList.length; i++) {
+                        //     if(this.imgFileList[i].path != this.initialImgFileList[i].path){
+                        //       imagesWereChanged = true;
+                        //       break;
+                        //     }
+                        //   }
+                        // }
+                        if (widget.departmentEntity == null) {
+                          DepartmentEntity depart = DepartmentEntity.empty().copyWith(
+                            label: this.titleController.text,
+                            description: this.descriptionController.text,
+                            address: this.addressController.text,
+                            begin: this.fromDate,
+                            end: this.untilDate,
+                          );
+                          BlocProvider.of<DepartmentsControllerBloc>(context).add(DepartmentsControllerEvent.createDepartment(
+                            departmentEntity: depart,
+                            imageFileList: this.imgFileList,
+                          ));
+                        } else {
+                          //Selected Image
+                          // Cropped
+                          // Foto Taken
+                          // Removed
+
+                          DepartmentEntity depart = widget.departmentEntity?.copyWith(
+                            label: this.titleController.text,
+                            description: this.descriptionController.text,
+                            address: this.addressController.text,
+                            begin: this.fromDate,
+                            end: this.untilDate,
+                          ) as DepartmentEntity;
+
+                          BlocProvider.of<DepartmentsControllerBloc>(context).add(DepartmentsControllerEvent.updateDepartment(
+                            departmentEntity: depart,
+                            imageFileList: this.imgFileList,
+                          ));
+                        }
+                      },
+                      text: "Speichern",
+                      showSpinner: state.isLoading,
+                    ),
+                    const SizedBox(
+                      height: 25,
+                    ),
+                  ],
+                ),
+              );
+            },
           ),
         ),
       ),
@@ -398,6 +459,7 @@ class _ManagerDepartmentEditorScreenState extends State<ManagerDepartmentEditorS
       for (int offset = 0; offset < loadedFiles.length; offset++) {
         animaListKey.currentState?.insertItem(lastIndex + offset);
       }
+      this.initialImgFileList = this.imgFileList;
     }
   }
 
@@ -416,7 +478,7 @@ class _ManagerDepartmentEditorScreenState extends State<ManagerDepartmentEditorS
         imgFileList.insertAll(lastIndex, files);
       });
       for (int offset = 0; offset < files.length; offset++) {
-        print(imgFileList[offset]);
+        // print(imgFileList[offset]);
         animaListKey.currentState?.insertItem(lastIndex + offset);
       }
     } on PlatformException catch (e) {

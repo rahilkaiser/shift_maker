@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -23,34 +25,86 @@ class DepartmentRepositoryImpl implements DepartmentRepository {
   });
 
   @override
-  Either<DepartmentFailure, Unit> create(DepartmentEntity departmentEntity) {
-    // upload files
+  Future<Either<DepartmentFailure, Unit>> create(DepartmentEntity departmentEntity, List<File> imageList) async {
+    try {
+      final managerDocRef = await this.firestore.getCurrentUserDocument();
 
-    // // TODO: implement create
+      for (var file in imageList) {
+        await this.firebaseStorage.ref('${managerDocRef.id}/departments/${departmentEntity.id.value}/${file.path.split("/").last}').putFile(
+              file,
+            );
+      }
 
+      ListResult result = await this.firebaseStorage.ref('${managerDocRef.id}/departments/${departmentEntity.id.value}').listAll();
 
-    //EInpendeln dass Bilder hochgeladen werden für jedes Objekt einen Ordner mit der Objekt-ID
-      //da rein die Bilder
-      // dann die Download url ziehen
-      // die url für jedes Objjekt in die Firebase Objekt Array reinpacken
-    throw UnimplementedError();
+      List<String> downloadUrls = await Future.wait(result.items.map((item) => item.getDownloadURL()).toList());
+
+      //Store in Firestore
+      DepartmentModel departmentModel = DepartmentModel.fromEntity(departmentEntity).copyWith(images: downloadUrls, manager: managerDocRef);
+
+      await this.firestore.collection("departments").doc(departmentModel.id).set(departmentModel.toMap());
+
+      return right(unit);
+    } catch (e) {
+      return left(GeneralFailure());
+    }
   }
 
   @override
-  Either<DepartmentFailure, Unit> delete(UniqueId uniqueId) {
-    //Jedesmal wenn ein objekt oder ein Bild deleted wird --> wird geprüft ob das Bild von einem Objekt benutzt wird
-    // Wenn Ja bleibt es
-    // Wenn nein kann das gelöscht werden
-    //
-    // // TODO: implement delete
-    throw UnimplementedError();
+  Future<Either<DepartmentFailure, Unit>> update(DepartmentEntity departmentEntity, List<File> imageList) async {
+    try {
+      final managerDocRef = await this.firestore.getCurrentUserDocument();
+
+      await this.firebaseStorage.ref('${managerDocRef.id}/departments/${departmentEntity.id.value}').listAll().then((images) {
+        images.items.forEach((image) async {
+          await this.firebaseStorage.ref(image.fullPath).delete();
+        });
+      });
+
+      for (var file in imageList) {
+        await this.firebaseStorage.ref('${managerDocRef.id}/departments/${departmentEntity.id.value}/${file.path.split("/").last}').putFile(
+              file,
+            );
+      }
+
+      ListResult result = await this.firebaseStorage.ref('${managerDocRef.id}/departments/${departmentEntity.id.value}').listAll();
+      List<String> downloadUrls = await Future.wait(result.items.map((item) => item.getDownloadURL()).toList());
+
+      DepartmentModel departmentModel = DepartmentModel.fromEntity(departmentEntity).copyWith(images: downloadUrls, manager: managerDocRef);
+      await this.firestore.collection("departments").doc(departmentModel.id).update(departmentModel.toMap());
+
+      return right(unit);
+    } catch (e) {
+      return left(GeneralFailure());
+    }
   }
 
   @override
-  Either<DepartmentFailure, Unit> update(DepartmentEntity departmentEntity) {
-    // // TODO: implement update
-    //
-    throw UnimplementedError();
+  Future<Either<DepartmentFailure, Unit>> delete(UniqueId depId) async {
+    try {
+      final managerDocRef = await this.firestore.getCurrentUserDocument();
+
+      //DELETE FIRESTOrage
+      await this.firebaseStorage.ref('${managerDocRef.id}/departments/${depId.value}').listAll().then((images) {
+        images.items.forEach((image) async {
+          print("NJNKJNKNKNNJKKNKJNKN");
+          print(image.fullPath);
+          await this.firebaseStorage.ref(image.fullPath).delete();
+        });
+      });
+
+      //DELETE Doc from Firestore
+      await this.firestore.collection("departments").doc(depId.value).delete();
+
+      return right(unit);
+    } on FirebaseException catch (e) {
+      if (e.code.contains("PERMISSION_DENIED")) {
+        // NOT_FOUND
+        return left(InsufficientPermissions());
+      }
+
+      return left(GeneralFailure());
+    }
   }
 
   @override
@@ -65,15 +119,6 @@ class DepartmentRepositoryImpl implements DepartmentRepository {
               .map(
                 (doc) {
                   if (currUserRole == UserRole.MANAGER && doc.data()['manager'].id == userDocRef.id) {
-                    // String departStorageRef = '${doc.data()['manager'].id}/departments/${doc.id}';
-
-                    // ListResult departImages = await this.firebaseStorage.ref(departStorageRef).listAll();
-                    // List<String> downloadUrls = [];
-                    //
-                    // Future.forEach(departImages.items, (Reference ref) async {
-                    //   String url = await ref.getDownloadURL();
-                    //   downloadUrls.add(url);
-                    // });
                     return DepartmentModel.fromFireStore(doc).toEntity();
                   }
                 },

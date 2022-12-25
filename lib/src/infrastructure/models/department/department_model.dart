@@ -11,6 +11,7 @@ class DepartmentModel {
   final DateTime? begin;
   final DateTime? end;
   final List<String> images;
+  final DocumentReference? manager;
   final dynamic serverTimeStamp;
 
   DepartmentModel({
@@ -21,6 +22,7 @@ class DepartmentModel {
     required this.begin,
     required this.end,
     required this.images,
+    required this.manager,
     this.serverTimeStamp,
   });
 
@@ -37,6 +39,7 @@ class DepartmentModel {
       begin: this.begin,
       end: this.end,
       images: this.images,
+      manager: this.manager,
     );
 
     return entity;
@@ -51,6 +54,7 @@ class DepartmentModel {
       begin: departmentEntity.begin,
       end: departmentEntity.end,
       images: departmentEntity.images,
+      manager: departmentEntity.manager,
       serverTimeStamp: FieldValue.serverTimestamp(),
     );
   }
@@ -62,6 +66,7 @@ class DepartmentModel {
     String? address,
     DateTime? begin,
     DateTime? end,
+    DocumentReference? manager,
     List<String>? images,
     dynamic? serverTimeStamp,
   }) {
@@ -73,6 +78,7 @@ class DepartmentModel {
       begin: begin ?? this.begin,
       end: end ?? this.end,
       images: images ?? this.images,
+      manager: manager ?? this.manager,
       serverTimeStamp: serverTimeStamp ?? this.serverTimeStamp,
     );
   }
@@ -86,22 +92,24 @@ class DepartmentModel {
       'begin': this.begin,
       'end': this.end,
       'images': this.images,
+      'manager': this.manager,
       'serverTimeStamp': this.serverTimeStamp,
     };
   }
 
   factory DepartmentModel.fromMap(Map<String, dynamic> map) {
-    print(map['images']);
-    Timestamp beginTmp = map['begin'];
-    Timestamp endTmp = map['end'];
+    // print(map['images']);
+    var beginTmp = map['begin'];
+    var endTmp = map['end'];
     return DepartmentModel(
       id: "",
       label: map['label'] as String,
       description: map['description'] as String,
       address: map['address'] as String,
-      begin: DateTime.fromMicrosecondsSinceEpoch(beginTmp.microsecondsSinceEpoch),
-      end: DateTime.fromMicrosecondsSinceEpoch(endTmp.microsecondsSinceEpoch),
+      begin: beginTmp != null ? DateTime.fromMicrosecondsSinceEpoch(beginTmp.microsecondsSinceEpoch) : null,
+      end: endTmp != null ? DateTime.fromMicrosecondsSinceEpoch(endTmp.microsecondsSinceEpoch) : null,
       images: List.from(map['images']),
+      manager: map['manager'],
       serverTimeStamp: map['serverTimeStamp'] as dynamic,
     );
   }

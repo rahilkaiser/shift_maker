@@ -11,6 +11,7 @@ import 'application/auth/register_bloc/register_bloc.dart';
 import 'application/current_user/current_user_watcher_bloc/current_user_watcher_bloc.dart';
 import 'application/current_user/theme_mode_bloc/theme_mode_bloc.dart';
 import 'application/departments/department_observer_bloc/department_observer_bloc.dart';
+import 'application/departments/departments_controller_bloc/departments_controller_bloc.dart';
 import 'application/departments/places_locator/places_locator_bloc.dart';
 import 'domain/repositories/auth/auth_repository.dart';
 import 'domain/repositories/current_user/current_user_repository.dart';
@@ -43,7 +44,9 @@ Future<void> registerStateManagementDependencies() async {
 
   //! departments
   serviceLocator.registerFactory(() => DepartmentObserverBloc(departmentRepository: serviceLocator()));
+  serviceLocator.registerFactory(() => DepartmentsControllerBloc(departmentRepository: serviceLocator()));
   serviceLocator.registerFactory(() => PlacesLocatorBloc(suggestionRepository: serviceLocator()));
+
 }
 
 Future<void> registerRepositoryDependencies() async {

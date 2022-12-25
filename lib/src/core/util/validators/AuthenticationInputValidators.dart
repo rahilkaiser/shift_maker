@@ -19,6 +19,8 @@ class AuthenticationInputValidators {
 
   static String get _kAddressNullError => "Please Enter your address";
 
+  static String get _kDepartmentLabelMismatch => "Der angegebene Objekt-Titel ist nicht korrekt";
+
   static GlobalKey<FormState> get formKey => GlobalKey<FormState>();
 
   AuthenticationInputValidators._();
@@ -58,5 +60,17 @@ class AuthenticationInputValidators {
       return _kMatchPassError;
     }
     return null;
+  }
+
+  /// Validates Delete Department
+  ///
+  ///
+  static String? validateDeleteDepartment(String? input, String departmentLabel) {
+    if (input == null || input.isEmpty) {
+      return _kDepartmentLabelMismatch;
+    } else if (departmentLabel == input) {
+      return null;
+    }
+    return _kDepartmentLabelMismatch;
   }
 }

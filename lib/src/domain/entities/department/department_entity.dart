@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 import '../core/unique_id.dart';
@@ -14,6 +15,7 @@ class DepartmentEntity with _$DepartmentEntity {
     required DateTime? begin,
     required DateTime? end,
     required List<String> images,
+    required DocumentReference? manager,
   }) = _DepartmentEntity;
 
   factory DepartmentEntity.empty() => DepartmentEntity(
@@ -24,5 +26,6 @@ class DepartmentEntity with _$DepartmentEntity {
     begin: null,
     end: null,
     images: [],
+    manager: null
   );
 }

@@ -81,6 +81,10 @@ class ManagerOverviewDepartmentScreenBody extends StatelessWidget {
             );
           },
         ),
+
+        // SliverPadding(
+        //   padding: CoreSpacingConstants.getCoreBodyContentPadding(size),
+        // )
       ],
     );
   }

@@ -1,7 +1,9 @@
 import 'package:auto_route/auto_route.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:transparent_image/transparent_image.dart';
+import 'package:intl/intl.dart';
 
 import '../../../../../application/core/is_editable_bloc/is_editable_bloc.dart';
 import '../../../../../application/departments/selected_department_bloc/selected_department_bloc.dart';
@@ -52,26 +54,21 @@ class ManagerDepartmentCardComponent extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
                   Expanded(
-                    child: Stack(
-                      fit: StackFit.passthrough,
-                      children: [
-                        const Center(child: CircularProgressIndicator()),
-                        ClipRRect(
-                          borderRadius: BorderRadius.vertical(top: Radius.circular(10)),
-                          child: FadeInImage.memoryNetwork(
-                            fadeInDuration: const Duration(milliseconds: 200),
-                            image: department.images.isNotEmpty
-                                ? department.images[0]
-                                : "https://firebasestorage.googleapis.com/v0/b/shiftmaker-d0904.appspot.com/o/VinceTest.jpg?alt=media&token=dd081341-2fec-4dd8-afdc-1b699b8481fd",
-                            fit: BoxFit.cover,
-                            placeholder: kTransparentImage,
-                          ),
-                        ),
-                      ],
+                    child: ClipRRect(
+                      borderRadius: const BorderRadius.vertical(top: Radius.circular(10)),
+                      child: CachedNetworkImage(
+
+                        fadeInDuration: const Duration(milliseconds: 300),
+                        fit: BoxFit.cover,
+                        imageUrl: department.images.isNotEmpty
+                            ? department.images[0]
+                            : "https://firebasestorage.googleapis.com/v0/b/shiftmaker-d0904.appspot.com/o/VinceTest.jpg?alt=media&token=dd081341-2fec-4dd8-afdc-1b699b8481fd",
+                        placeholder: (context, url) => const Center(child: CircularProgressIndicator()),
+                      ),
                     ),
                   ),
                   // Label
-                  Flexible(
+                  Expanded(
                     // color: Colors.purple,
                     child: Padding(
                       padding: const EdgeInsets.all(8.0),
@@ -81,7 +78,7 @@ class ManagerDepartmentCardComponent extends StatelessWidget {
                           RichText(
                             maxLines: 1,
                             text: TextSpan(
-                              text: "${this.department.label}",
+                              text: this.department.label,
                               style: themeData.textTheme.headline5?.copyWith(
                                 fontSize: 19,
                                 fontWeight: FontWeight.w600,
@@ -95,8 +92,7 @@ class ManagerDepartmentCardComponent extends StatelessWidget {
                             maxLines: 2,
                             overflow: TextOverflow.ellipsis,
                             text: TextSpan(
-                              text:
-                                  "${this.department.description} Lorem ipsum dolor sit amet, consectetur adipisici elit, …“ ist ein Blindtext, der nichts bedeuten soll, sondern als Platzhalter im Layout verwendet wird, um einen Eindruck vom fertigen Dokument zu erhalten. Wikipedia",
+                              text: this.department.description,
                               style: themeData.textTheme.headline5?.copyWith(
                                 fontSize: 13,
                               ),
@@ -107,9 +103,10 @@ class ManagerDepartmentCardComponent extends StatelessWidget {
                           ),
                           Expanded(
                             child: Align(
-                              alignment: Alignment.bottomLeft,
+                              alignment: Alignment.bottomCenter,
                               child: Row(
                                 crossAxisAlignment: CrossAxisAlignment.end,
+                                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                                 children: [
                                   Flexible(
                                     child: Column(
@@ -117,7 +114,9 @@ class ManagerDepartmentCardComponent extends StatelessWidget {
                                       children: [
                                         RichText(
                                           text: TextSpan(
-                                            text: "Beginn:  03.07.2022",
+                                            text: this.department.begin != null
+                                                ? DateFormat('dd.MM.yyyy').format(department.begin!).toString()
+                                                : "Beliebig",
                                             style: themeData.textTheme.headline5?.copyWith(fontSize: 13, fontWeight: FontWeight.w600),
                                           ),
                                         ),
@@ -126,7 +125,9 @@ class ManagerDepartmentCardComponent extends StatelessWidget {
                                         ),
                                         RichText(
                                           text: TextSpan(
-                                            text: "Ende:      03.08.2023",
+                                            text: this.department.end != null
+                                                ? DateFormat('dd.MM.yyyy').format(department.end!).toString()
+                                                : "Beliebig",
                                             style: themeData.textTheme.headline5?.copyWith(fontSize: 13, fontWeight: FontWeight.w600),
                                           ),
                                         ),
@@ -134,6 +135,7 @@ class ManagerDepartmentCardComponent extends StatelessWidget {
                                     ),
                                   ),
                                   Expanded(
+                                    flex: 2,
                                     child: Row(
                                       mainAxisAlignment: MainAxisAlignment.end,
                                       children: [

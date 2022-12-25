@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:dartz/dartz.dart';
 
 
@@ -15,15 +17,15 @@ abstract class DepartmentRepository {
   /// Creates a new Department
   ///
   ///
-  Either<DepartmentFailure,Unit> create(DepartmentEntity departmentEntity);
+  Future<Either<DepartmentFailure,Unit>> create(DepartmentEntity departmentEntity, List<File> imageList);
 
   /// Updates a Department
   ///
   ///
-  Either<DepartmentFailure,Unit> update(DepartmentEntity departmentEntity);
+  Future<Either<DepartmentFailure,Unit>> update(DepartmentEntity departmentEntity, List<File> imageList);
 
   /// Deletes a Department
   ///
   ///
-  Either<DepartmentFailure,Unit> delete(UniqueId uniqueId);
+  Future<Either<DepartmentFailure,Unit>> delete(UniqueId uniqueId);
 }
