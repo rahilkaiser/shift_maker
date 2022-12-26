@@ -26,6 +26,7 @@ class RegisterAddDataScreen extends StatelessWidget {
       value: this.registerBloc,
       child: BlocConsumer<RegisterBloc, RegisterState>(
         bloc: this.registerBloc,
+        listenWhen: ((previous, current) => previous.failureOrSuccessOption != current.failureOrSuccessOption),
         listener: (context, state) {
           RegisterExecutor.onRegistrationAttempt(state, context);
         },

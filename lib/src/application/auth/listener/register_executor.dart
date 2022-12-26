@@ -26,7 +26,7 @@ class RegisterExecutor {
               color: Colors.green,
             );
             BlocProvider.of<AuthStatusBloc>(context).add(const AuthStatusEvent.authCheckRequested());
-            AutoRouter.of(context).replaceAll([const LoginRoute()]);
+            AutoRouter.of(context).replaceAll([const HomeRoute()]);
           },
         ),
       );

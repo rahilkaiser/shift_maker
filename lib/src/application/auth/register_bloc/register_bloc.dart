@@ -41,41 +41,24 @@ class RegisterBloc extends Bloc<RegisterEvent, RegisterState> {
   }
 
   void changeEmail(EmailChanged event, Emitter<RegisterState> emit) {
-    debugPrint("changeEmail" + event.email);
-    debugPrint("changePASS" + state.password);
-    debugPrint("changeNAME" + state.name);
-    debugPrint("changePHONE" + state.phoneNum);
-
     emit(state.copyWith(
       emailAddress: event.email,
     ));
   }
 
   void changePassword(PasswordChanged event, Emitter<RegisterState> emit) {
-    debugPrint("changeEmail" + state.emailAddress);
-    debugPrint("changePASS" + event.password);
-    debugPrint("changeNAME" + state.name);
-    debugPrint("changePHONE" + state.phoneNum);
     emit(state.copyWith(
       password: event.password,
     ));
   }
 
   void changeName(NameChanged event, Emitter<RegisterState> emit) {
-    debugPrint("changeEmail" + state.emailAddress);
-    debugPrint("changePASS" + state.password);
-    debugPrint("changeNAME" + event.name);
-    debugPrint("changePHONE" + state.phoneNum);
     emit(state.copyWith(
       name: event.name,
     ));
   }
 
   void changePhoneNum(PhoneNumberChanged event, Emitter<RegisterState> emit) {
-    debugPrint("changeEmail" + state.emailAddress);
-    debugPrint("changePASS" + state.password);
-    debugPrint("changeNAME" + state.name);
-    debugPrint("changePHONE" + event.phoneNum);
     emit(state.copyWith(
       phoneNum: event.phoneNum,
     ));

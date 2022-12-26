@@ -72,7 +72,7 @@ class ManagerModel {
       'email': this.email,
       'name': this.name,
       'role': this.role,
-      'phone_number': this.phone,
+      'phoneNumber': this.phone,
       'serverTimeStamp': this.serverTimeStamp,
     };
   }
@@ -83,7 +83,7 @@ class ManagerModel {
       email: map['email'] as String,
       name: map['name'] as String,
       role: map['role'] as String,
-      phone: map['phone_number'] as String,
+      phone: map['phoneNumber'] as String,
       serverTimeStamp: map['serverTimeStamp'] as dynamic,
     );
   }

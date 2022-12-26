@@ -18,9 +18,6 @@ extension FirebaseUserMapper on User {
     // print("QEWEWEEW");
     // print(data);
 
-
-
-
     return UserEntity(
       id: UniqueId.fromUniqueString(uid),
       role: UserRole.MANAGER,

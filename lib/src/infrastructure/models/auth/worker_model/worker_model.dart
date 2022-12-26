@@ -126,7 +126,6 @@ class WorkerModel {
   }
 
   factory WorkerModel.fromMap(Map<String, dynamic> map) {
-
     var birthTmp = map['createdAt'];
     var createdAtTmp = map['createdAt'];
 
@@ -140,8 +139,8 @@ class WorkerModel {
       profileImage: map['profileImage'] as String,
       birthDate: birthTmp != null ? DateTime.fromMicrosecondsSinceEpoch(birthTmp.microsecondsSinceEpoch) : null,
       createdAt: createdAtTmp != null ? DateTime.fromMicrosecondsSinceEpoch(createdAtTmp.microsecondsSinceEpoch) : null,
-      docs: map['docs'] as List<String>,
-      assignedDeparts: map['assignedDeparts'] as List<DepartmentEntity>,
+      docs: List.from(map['docs']),
+      assignedDeparts: [],
       manager: map['manager'] as DocumentReference,
       serverTimeStamp: map['serverTimeStamp'] as dynamic,
     );
