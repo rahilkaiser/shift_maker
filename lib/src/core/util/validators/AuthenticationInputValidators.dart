@@ -3,9 +3,15 @@ import 'package:flutter/cupertino.dart';
 class AuthenticationInputValidators {
   static RegExp get _emailValidatorRegExp => RegExp(r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+");
 
+  static RegExp get _validCharacters => RegExp(r'^[a-zA-Z0-9]+$');
+
   static String get _kEmailNullError => "Please Enter your email";
 
+  static String get _kNameNullError => "Please Enter a name";
+
   static String get _kInvalidEmailError => "Please Enter Valid Email";
+
+  static String get _kInvalidNameError => "Please Enter Valid Name ... only letters and numbers allowed";
 
   static String get _kPassNullError => "Please Enter your password";
 
@@ -60,6 +66,17 @@ class AuthenticationInputValidators {
       return _kMatchPassError;
     }
     return null;
+  }
+
+  /// Validates Name
+  static String? validateName(String? input) {
+    if (input == null || input.isEmpty) {
+      return _kNamelNullError;
+    } else if (_validCharacters.hasMatch(input)) {
+      return null;
+    } else {
+      return _kInvalidNameError;
+    }
   }
 
   /// Validates Delete Department

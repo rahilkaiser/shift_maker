@@ -6,6 +6,7 @@ import '../../../application/auth/auth_status_bloc/auth_status_bloc.dart';
 import '../../../application/current_user/current_user_watcher_bloc/current_user_watcher_bloc.dart';
 import '../../../application/departments/department_observer_bloc/department_observer_bloc.dart';
 import '../../../domain/entities/users/manager/manager_entity.dart';
+
 import '../../../domain/entities/users/worker/worker_entity.dart';
 import '../../../injection.dart';
 import '../../routes/router.gr.dart';
@@ -21,13 +22,10 @@ class HomeScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final departObserverBloc = serviceLocator<DepartmentObserverBloc>()..add(ObserveAllEvent());
 
-    print("EXEDDD");
-
     return MultiBlocProvider(
       providers: [
         BlocProvider<DepartmentObserverBloc>(create: (context) => departObserverBloc),
         BlocProvider<CurrentUserWatcherBloc>(
-          //Get The Corresponding UserEntity
           create: (context) => serviceLocator<CurrentUserWatcherBloc>()..add(CurrentUserGetEvent()),
         ),
       ],
@@ -59,7 +57,10 @@ class HomeScreen extends StatelessWidget {
                 );
               }
             }
-            return const Scaffold(
+            return Scaffold(
+              // floatingActionButton: FloatingActionButton(heroTag: "LOGOUT-DEFAULT", onPressed: () {
+              //   AutoRouter.of(context).replace(const LoginRoute());
+              // }),
               body: Center(
                 child: CircularProgressIndicator(),
               ),

@@ -8,6 +8,8 @@ import '../../../components/continue_button_component/continue_button_component.
 import 'register_form_component/register_form_component.dart';
 
 class RegisterScreenBodyLandscape extends StatelessWidget {
+  // final RegisterBloc registerBloc; equired this.registerBloc}
+
   const RegisterScreenBodyLandscape({Key? key}) : super(key: key);
 
   @override

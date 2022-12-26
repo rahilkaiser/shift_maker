@@ -1,14 +1,8 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 import '../../domain/entities/core/unique_id.dart';
 import '../../domain/entities/user/user_entity.dart';
 import '../../domain/entities/user/user_role.dart';
-import '../../domain/entities/users/manager/manager_entity.dart';
-import '../../domain/entities/users/worker/worker_entity.dart';
-import '../../injection.dart';
-import '../models/auth/manager_model/manager_model.dart';
-import '../models/auth/worker_model/worker_model.dart';
 
 extension FirebaseUserMapper on User {
   Future<UserEntity> toEntity() async {
@@ -24,10 +18,14 @@ extension FirebaseUserMapper on User {
     // print("QEWEWEEW");
     // print(data);
 
+
+
+
     return UserEntity(
       id: UniqueId.fromUniqueString(uid),
       role: UserRole.MANAGER,
       email: '',
+      phone: '',
     );
     // try {
     //   // Get reference to Firestore collection

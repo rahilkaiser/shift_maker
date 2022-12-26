@@ -2,6 +2,7 @@ import 'package:auto_route/auto_route.dart';
 import 'package:auto_route/empty_router_widgets.dart';
 
 import '../screens/authentication/login_screen/login_screen.dart';
+import '../screens/authentication/register_add_data_screen/register_add_data_screen.dart';
 import '../screens/authentication/register_screen/register_screen.dart';
 import '../screens/home/home_screen.dart';
 
@@ -13,6 +14,8 @@ import '../screens/manager/manager_overview_department_screen/components/manager
 import '../screens/manager/manager_overview_department_screen/components/manager_department_details_view/components/manager_edit_department_screen_body.dart';
 import '../screens/manager/manager_overview_department_screen/components/manager_department_details_view/manager_department_details_screen.dart';
 import '../screens/manager/manager_overview_department_screen/manager_overview_department_screen.dart';
+import '../screens/manager/manager_overview_worker_screen/components/manager_worker_details_screen/manager_worker_details_screen.dart';
+import '../screens/manager/manager_overview_worker_screen/components/manager_worker_editor_screen/manager_worker_editor_screen.dart';
 import '../screens/manager/manager_overview_worker_screen/manager_overview_worker_screen.dart';
 import '../screens/manager/manager_profile_screen/manager_profile_screen.dart';
 
@@ -22,7 +25,19 @@ import '../screens/splash/splash_screen.dart';
 @MaterialAutoRouter(replaceInRouteName: 'Screen,Route', routes: <AutoRoute>[
   AutoRoute(path: "/", page: SplashScreen),
   AutoRoute(path: "login", page: LoginScreen),
-  AutoRoute(path: "register", page: RegisterScreen),
+
+  AutoRoute(path: 'register', name: 'ManagerRegisterRouter', page: EmptyRouterScreen, children: [
+    AutoRoute(path: '', page: RegisterScreen, deferredLoading: true),
+    CustomRoute(
+      path: 'add-data',
+      page: RegisterAddDataScreen,
+      transitionsBuilder: TransitionsBuilders.fadeIn,
+      deferredLoading: true,
+    ),
+  ]),
+
+  // AutoRoute(path: "register", page: RegisterScreen),
+  // AutoRoute(path: "register-add-data", page: RegisterAddDataScreen),
   AutoRoute(path: "adress_edit", page: ManagerAdressMapScreen),
   AutoRoute(path: "home", page: HomeScreen, children: [
     AutoRoute(name: 'ManagerHomeRouter', page: EmptyRouterScreen, children: [
@@ -38,7 +53,7 @@ import '../screens/splash/splash_screen.dart';
         deferredLoading: true,
       ),
       CustomRoute(
-        path: 'edit',
+        path: 'department-edit',
         page: ManagerDepartmentEditorScreen,
         transitionsBuilder: TransitionsBuilders.fadeIn,
         deferredLoading: true,
@@ -47,6 +62,18 @@ import '../screens/splash/splash_screen.dart';
 
     AutoRoute(name: 'ManagerOverviewWorkerRouter', page: EmptyRouterScreen, children: [
       AutoRoute(path: '', page: ManagerOverviewWorkerScreen),
+      CustomRoute(
+        path: 'worker',
+        page: ManagerWorkerDetailsScreen,
+        transitionsBuilder: TransitionsBuilders.fadeIn,
+        deferredLoading: true,
+      ),
+      CustomRoute(
+        path: 'worker-edit',
+        page: ManagerWorkerEditorScreen,
+        transitionsBuilder: TransitionsBuilders.fadeIn,
+        deferredLoading: true,
+      ),
     ]),
 
     AutoRoute(name: 'ManagerProfileRouter', page: EmptyRouterScreen, children: [

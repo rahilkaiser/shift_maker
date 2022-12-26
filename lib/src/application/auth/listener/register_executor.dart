@@ -1,15 +1,16 @@
 import 'package:auto_route/auto_route.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../../core/util/failures/auth_failures/auth_failure.dart';
 import '../../../view/routes/router.gr.dart';
+import '../auth_status_bloc/auth_status_bloc.dart';
 import '../register_bloc/register_bloc.dart';
 
 class RegisterExecutor {
   RegisterExecutor._();
 
-  static void onRegistrationAttempt(RegisterState state, BuildContext context) =>
-      state.failureOrSuccessOption.fold(
+  static void onRegistrationAttempt(RegisterState state, BuildContext context) => state.failureOrSuccessOption.fold(
         () => {},
         (eitherFailureOrSuccess) => eitherFailureOrSuccess.fold(
           (failure) {
@@ -24,8 +25,8 @@ class RegisterExecutor {
               "Successfully registered",
               color: Colors.green,
             );
-
-            Navigator.pop(context);
+            BlocProvider.of<AuthStatusBloc>(context).add(const AuthStatusEvent.authCheckRequested());
+            AutoRouter.of(context).replaceAll([const LoginRoute()]);
           },
         ),
       );

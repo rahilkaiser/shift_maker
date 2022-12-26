@@ -4,6 +4,7 @@ import '../../../../application/auth/register_bloc/register_bloc.dart';
 import '../../../../injection.dart';
 
 import '../../components/app_bar_title_component/app_bar_title_component.dart';
+import '../register_add_data_screen/register_add_data_screen.dart';
 import 'components/register_screen_body_landscape.dart';
 import 'components/register_screen_body_portrait.dart';
 
@@ -17,8 +18,12 @@ class RegisterScreen extends StatelessWidget {
       body: BlocProvider(
         create: (context) => serviceLocator<RegisterBloc>(),
         child: MediaQuery.of(context).orientation == Orientation.portrait
-            ? const RegisterScreenBodyPortrait()
-            : const RegisterScreenBodyLandscape(),
+            ? RegisterScreenBodyPortrait(
+                // registerBloc: context.read<RegisterBloc>(),
+              )
+            : const RegisterScreenBodyLandscape(
+                // registerBloc: context.read<RegisterBloc>(),
+                ),
       ),
     );
   }

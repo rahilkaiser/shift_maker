@@ -21,6 +21,7 @@ class ManagerOverviewDepartmentScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       floatingActionButton: FloatingActionButton(
+        heroTag: "create-departments",
         child: const Icon(Icons.add, size: 35),
         onPressed: () {
           // context.read<SelectedDepartmentBloc>().add(const SelectedDepartmentEvent.unselectDepartmentEntityEvent());

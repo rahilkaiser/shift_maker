@@ -27,6 +27,14 @@ class RegisterBloc extends Bloc<RegisterEvent, RegisterState> {
       this.changePassword(event, emit);
     });
 
+    on<NameChanged>((event, emit) {
+      this.changeName(event, emit);
+    });
+
+    on<PhoneNumberChanged>((event, emit) {
+      this.changePhoneNum(event, emit);
+    });
+
     on<RegisterWithEmailAndPasswordPressed>((event, emit) async {
       await this.registerWithEmailAndPasswordPressed(event, emit);
     });
@@ -34,32 +42,61 @@ class RegisterBloc extends Bloc<RegisterEvent, RegisterState> {
 
   void changeEmail(EmailChanged event, Emitter<RegisterState> emit) {
     debugPrint("changeEmail" + event.email);
+    debugPrint("changePASS" + state.password);
+    debugPrint("changeNAME" + state.name);
+    debugPrint("changePHONE" + state.phoneNum);
+
     emit(state.copyWith(
       emailAddress: event.email,
     ));
   }
 
   void changePassword(PasswordChanged event, Emitter<RegisterState> emit) {
+    debugPrint("changeEmail" + state.emailAddress);
+    debugPrint("changePASS" + event.password);
+    debugPrint("changeNAME" + state.name);
+    debugPrint("changePHONE" + state.phoneNum);
     emit(state.copyWith(
       password: event.password,
     ));
   }
 
-  Future<void> registerWithEmailAndPasswordPressed(
-      RegisterWithEmailAndPasswordPressed event, Emitter<RegisterState> emit) async {
+  void changeName(NameChanged event, Emitter<RegisterState> emit) {
+    debugPrint("changeEmail" + state.emailAddress);
+    debugPrint("changePASS" + state.password);
+    debugPrint("changeNAME" + event.name);
+    debugPrint("changePHONE" + state.phoneNum);
+    emit(state.copyWith(
+      name: event.name,
+    ));
+  }
+
+  void changePhoneNum(PhoneNumberChanged event, Emitter<RegisterState> emit) {
+    debugPrint("changeEmail" + state.emailAddress);
+    debugPrint("changePASS" + state.password);
+    debugPrint("changeNAME" + state.name);
+    debugPrint("changePHONE" + event.phoneNum);
+    emit(state.copyWith(
+      phoneNum: event.phoneNum,
+    ));
+  }
+
+  Future<void> registerWithEmailAndPasswordPressed(RegisterWithEmailAndPasswordPressed event, Emitter<RegisterState> emit) async {
     emit(state.copyWith(
       isSubmitting: true,
       failureOrSuccessOption: none(),
     ));
 
-    final failureOrSuccess = await this
-        .authRepository
-        .registerWithEmailAndPasswort(emailAddress: state.emailAddress, password: state.password);
+    final failureOrSuccess = await this.authRepository.registerWithEmailAndPasswort(
+          emailAddress: state.emailAddress,
+          password: state.password,
+          name: state.name,
+          phoneNumber: state.phoneNum,
+        );
 
     emit(state.copyWith(
       isSubmitting: false,
       failureOrSuccessOption: optionOf(failureOrSuccess),
     ));
-
   }
 }

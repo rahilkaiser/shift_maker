@@ -1,14 +1,16 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
-import '../../../core/util/errors/errors.dart';
 import '../../../core/util/failures/auth_failures/auth_failure.dart';
 import 'package:dartz/dartz.dart';
 
+import '../../../domain/entities/core/unique_id.dart';
 import '../../../domain/entities/user/user_entity.dart';
+import '../../../domain/entities/user/user_role.dart';
+import '../../../domain/entities/users/manager/manager_entity.dart';
 import '../../../domain/repositories/auth/auth_repository.dart';
-import '../../extensions/firebase_helpers.dart';
 import '../../extensions/firebase_user_mapper.dart';
+import '../../models/auth/manager_model/manager_model.dart';
 
 class AuthRepositoryImpl implements AuthRepository {
   final FirebaseAuth firebaseAuth;
@@ -17,8 +19,7 @@ class AuthRepositoryImpl implements AuthRepository {
   AuthRepositoryImpl({required this.firebaseAuth, required this.firestore});
 
   @override
-  Future<Either<AuthFailure, Unit>> loginWithEmailAndPasswort(
-      {required String emailAddress, required String password}) async {
+  Future<Either<AuthFailure, Unit>> loginWithEmailAndPasswort({required String emailAddress, required String password}) async {
     try {
       await firebaseAuth.signInWithEmailAndPassword(
         email: emailAddress,
@@ -43,10 +44,28 @@ class AuthRepositoryImpl implements AuthRepository {
   }
 
   @override
-  Future<Either<AuthFailure, Unit>> registerWithEmailAndPasswort(
-      {required String emailAddress, required String password}) async {
+  Future<Either<AuthFailure, Unit>> registerWithEmailAndPasswort({
+    required String emailAddress,
+    required String password,
+    required String name,
+    required String phoneNumber,
+  }) async {
     try {
-      await firebaseAuth.createUserWithEmailAndPassword(email: emailAddress, password: password);
+      UserCredential userCred = await firebaseAuth.createUserWithEmailAndPassword(
+        email: emailAddress,
+        password: password,
+      );
+
+      ManagerEntity managerEntity = ManagerEntity(
+        id: UniqueId.fromUniqueString(userCred.user?.uid),
+        role: UserRole.MANAGER,
+        email: emailAddress,
+        name: name,
+        phone: phoneNumber,
+      );
+
+      ManagerModel managerModel = ManagerModel.fromEntity(managerEntity);
+      await this.firestore.collection("users").doc(userCred.user?.uid).set(managerModel.toMap());
 
       return right(unit);
     } on FirebaseAuthException catch (e) {
