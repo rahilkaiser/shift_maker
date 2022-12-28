@@ -3,6 +3,10 @@ part of 'is_editable_bloc.dart';
 @immutable
 abstract class IsEditableEvent {}
 
-class ChangeToIsEditableEvent extends IsEditableEvent {}
+class ChangeDepartToIsEditableEvent extends IsEditableEvent {}
 
-class ChangeToIsNotEditableEvent extends IsEditableEvent {}
+class ChangeDepartToIsNotEditableEvent extends IsEditableEvent {}
+
+class ChangeWorkerToIsEditableEvent extends IsEditableEvent {}
+
+class ChangeWorkerToIsNotEditableEvent extends IsEditableEvent {}

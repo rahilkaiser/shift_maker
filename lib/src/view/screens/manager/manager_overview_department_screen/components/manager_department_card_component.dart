@@ -35,7 +35,7 @@ class ManagerDepartmentCardComponent extends StatelessWidget {
 
         AutoRouter.of(context).push(ManagerDepartmentDetailsRoute(departmentEntity: depart)).then(
           (value) {
-            context.read<IsEditableBloc>().add(ChangeToIsNotEditableEvent());
+            context.read<IsEditableBloc>().add(ChangeDepartToIsNotEditableEvent());
             context.read<SelectedDepartmentBloc>().add(
                   const SelectedDepartmentEvent.unselectDepartmentEntityEvent(),
                 );

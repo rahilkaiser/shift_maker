@@ -5,6 +5,7 @@ import '../../../application/auth/auth_status_bloc/auth_status_bloc.dart';
 
 import '../../../application/current_user/current_user_watcher_bloc/current_user_watcher_bloc.dart';
 import '../../../application/departments/department_observer_bloc/department_observer_bloc.dart';
+import '../../../application/workers/worker_observer_bloc/worker_observer_bloc.dart';
 import '../../../domain/entities/users/manager/manager_entity.dart';
 
 import '../../../domain/entities/users/worker/worker_entity.dart';
@@ -21,10 +22,12 @@ class HomeScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final departObserverBloc = serviceLocator<DepartmentObserverBloc>()..add(ObserveAllEvent());
+    final workerObserverBloc = serviceLocator<WorkerObserverBloc>()..add(WorkerObserveAllEvent());
 
     return MultiBlocProvider(
       providers: [
         BlocProvider<DepartmentObserverBloc>(create: (context) => departObserverBloc),
+        BlocProvider<WorkerObserverBloc>(create: (context) => workerObserverBloc),
         BlocProvider<CurrentUserWatcherBloc>(
           create: (context) => serviceLocator<CurrentUserWatcherBloc>()..add(CurrentUserGetEvent()),
         ),

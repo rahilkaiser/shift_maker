@@ -27,7 +27,7 @@ class ManagerOverviewDepartmentScreen extends StatelessWidget {
           // context.read<SelectedDepartmentBloc>().add(const SelectedDepartmentEvent.unselectDepartmentEntityEvent());
           AutoRouter.of(context).push(ManagerDepartmentEditorRoute(departmentEntity: null)).then(
             (value) {
-              context.read<IsEditableBloc>().add(ChangeToIsNotEditableEvent());
+              context.read<IsEditableBloc>().add(ChangeWorkerToIsNotEditableEvent());
             },
           );
         },

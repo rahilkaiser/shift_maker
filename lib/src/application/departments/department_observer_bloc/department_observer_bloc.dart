@@ -33,6 +33,7 @@ class DepartmentObserverBloc extends Bloc<DepartmentObserverEvent, DepartmentObs
 
     this._streamSubscription = departmentRepository.watchAll().listen(
       (failureOrDepart) {
+        print("SOMETHING CHANGED HERE THIS IS IT");
         add(DepartmentUpdatedEvent(failureOrDepart: failureOrDepart));
       },
     );
@@ -46,7 +47,6 @@ class DepartmentObserverBloc extends Bloc<DepartmentObserverEvent, DepartmentObs
         // for (int i = 0; i < 10; i++) {
         //   depTest.add(departs[0]);
         // }
-        print("JNJNJN");
         print(departs);
         return emit(DepartmentObserverSuccessState(departmentEntities: departs));
       },

@@ -23,7 +23,7 @@ class ManagerOverviewWorkerScreen extends StatelessWidget {
           ))
               .then(
             (value) {
-              context.read<IsEditableBloc>().add(ChangeToIsNotEditableEvent());
+              context.read<IsEditableBloc>().add(ChangeWorkerToIsNotEditableEvent());
             },
           );
         },

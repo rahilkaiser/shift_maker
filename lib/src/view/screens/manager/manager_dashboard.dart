@@ -56,10 +56,10 @@ class ManagerDashboard extends StatelessWidget {
                           AutoLeadingButton(
                             showIfChildCanPop: true,
                             builder: (context, leadingType, action) {
-                              if (isEditableState.isEditable && selectedDepartmentstate.departmentEntity != null && tabsRouter.activeIndex == 1) {
+                              if (isEditableState.departIsEditable && selectedDepartmentstate.departmentEntity != null && tabsRouter.activeIndex == 1) {
                                 return IconButton(
                                   onPressed: () {
-                                    context.read<IsEditableBloc>().add(ChangeToIsNotEditableEvent());
+                                    context.read<IsEditableBloc>().add(ChangeDepartToIsNotEditableEvent());
 
                                     AutoRouter.of(context)
                                         .push(
@@ -68,17 +68,17 @@ class ManagerDashboard extends StatelessWidget {
                                           ),
                                         )
                                         .then(
-                                          (value) => context.read<IsEditableBloc>().add(ChangeToIsEditableEvent()),
+                                          (value) => context.read<IsEditableBloc>().add(ChangeDepartToIsEditableEvent()),
                                         );
                                   },
                                   icon: const Icon(Icons.edit),
                                 );
                               }
 
-                              if (isEditableState.isEditable && selectWorkerState.workerEntity != null && tabsRouter.activeIndex == 1) {
+                              if (isEditableState.workerIsEditable && selectWorkerState.workerEntity != null && tabsRouter.activeIndex == 2) {
                                 return IconButton(
                                   onPressed: () {
-                                    context.read<IsEditableBloc>().add(ChangeToIsNotEditableEvent());
+                                    context.read<IsEditableBloc>().add(ChangeWorkerToIsNotEditableEvent());
 
                                     AutoRouter.of(context)
                                         .push(
@@ -87,9 +87,7 @@ class ManagerDashboard extends StatelessWidget {
                                           ),
                                         )
                                         .then(
-                                          (value) => context.read<IsEditableBloc>().add(
-                                                ChangeToIsEditableEvent(),
-                                              ),
+                                          (value) => context.read<IsEditableBloc>().add(ChangeWorkerToIsEditableEvent()),
                                         );
                                   },
                                   icon: const Icon(Icons.edit),

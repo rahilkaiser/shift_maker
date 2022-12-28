@@ -34,7 +34,7 @@ class _ManagerEditDepartmentScreenBodyState extends State<ManagerEditDepartmentS
   @override
   void initState() {
     // TODO: implement initState
-    context.read<IsEditableBloc>().add(ChangeToIsEditableEvent());
+    context.read<IsEditableBloc>().add(ChangeDepartToIsEditableEvent());
     super.initState();
   }
 
