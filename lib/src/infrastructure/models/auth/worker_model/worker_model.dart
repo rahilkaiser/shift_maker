@@ -18,6 +18,10 @@ class WorkerModel {
   final List<String> docs;
   final List<DepartmentEntity> assignedDeparts;
   final DocumentReference? manager;
+  final String description;
+  final String preference;
+  final DateTime? validUntil;
+  final int maxWorkDays;
   final dynamic serverTimeStamp;
 
   WorkerModel(
@@ -33,6 +37,10 @@ class WorkerModel {
       required this.docs,
       required this.profileImage,
       required this.manager,
+      required this.description,
+      required this.preference,
+      required this.validUntil,
+      required this.maxWorkDays,
       this.serverTimeStamp});
 
   factory WorkerModel.fromFireStore(DocumentSnapshot documentSnapshot) {
@@ -54,6 +62,10 @@ class WorkerModel {
       createdAt: this.createdAt,
       docs: this.docs,
       profileImage: this.profileImage,
+      description: this.description,
+      preference: this.preference,
+      validUntil: this.validUntil,
+      maxWorkDays: this.maxWorkDays,
     );
   }
 
@@ -72,6 +84,10 @@ class WorkerModel {
       birthDate: workerEntity.birthDate,
       assignedDeparts: workerEntity.assignedDeparts,
       manager: workerEntity.manager,
+      description: workerEntity.description,
+      preference: workerEntity.preference,
+      validUntil: workerEntity.validUntil,
+      maxWorkDays: workerEntity.maxWorkDays,
     );
   }
 
@@ -88,6 +104,9 @@ class WorkerModel {
     List<String>? docs,
     List<DepartmentEntity>? assignedDeparts,
     DocumentReference? manager,
+    String? description,
+    String? preference,
+    DateTime? validUntil,
     dynamic? serverTimeStamp,
   }) {
     return WorkerModel(
@@ -103,6 +122,10 @@ class WorkerModel {
       docs: docs ?? this.docs,
       assignedDeparts: assignedDeparts ?? this.assignedDeparts,
       manager: manager ?? this.manager,
+      description: description ?? this.description,
+      preference: preference ?? this.preference,
+      validUntil: validUntil ?? this.validUntil,
+      maxWorkDays: maxWorkDays ?? this.maxWorkDays,
       serverTimeStamp: serverTimeStamp ?? this.serverTimeStamp,
     );
   }
@@ -122,12 +145,17 @@ class WorkerModel {
       'assignedDeparts': this.assignedDeparts,
       'manager': this.manager,
       'serverTimeStamp': this.serverTimeStamp,
+      'preference': this.preference,
+      'description': this.description,
+      'maxWorkDays': this.maxWorkDays,
+      'validUntil': this.validUntil,
     };
   }
 
   factory WorkerModel.fromMap(Map<String, dynamic> map) {
-    var birthTmp = map['createdAt'];
+    var birthTmp = map['birthDate'];
     var createdAtTmp = map['createdAt'];
+    var validUntilTmp = map['validUntil'];
 
     return WorkerModel(
       id: "",
@@ -142,6 +170,10 @@ class WorkerModel {
       docs: List.from(map['docs']),
       assignedDeparts: [],
       manager: map['manager'] as DocumentReference,
+      validUntil: validUntilTmp != null ? DateTime.fromMicrosecondsSinceEpoch(validUntilTmp.microsecondsSinceEpoch) : null,
+      description: map['description'] as String,
+      preference: map['preference'] as String,
+      maxWorkDays: map['maxWorkDays'] as int,
       serverTimeStamp: map['serverTimeStamp'] as dynamic,
     );
   }

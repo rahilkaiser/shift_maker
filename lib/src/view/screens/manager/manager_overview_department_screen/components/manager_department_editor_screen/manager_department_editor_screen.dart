@@ -10,15 +10,14 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:intl/intl.dart';
 
 import '../../../../../../application/departments/departments_controller_bloc/departments_controller_bloc.dart';
 import '../../../../../../core/theme/sizefit/core_spacing_constants.dart';
-import '../../../../../../domain/entities/core/unique_id.dart';
 import '../../../../../../domain/entities/department/department_entity.dart';
 import '../../../../../../injection.dart';
 import '../../../../../routes/router.gr.dart';
 import '../../../../components/continue_button_component/continue_button_component.dart';
-import 'components/manager__adress_map_screen.dart';
 
 class ManagerDepartmentEditorScreen extends StatefulWidget {
   final DepartmentEntity? departmentEntity;
@@ -29,11 +28,14 @@ class ManagerDepartmentEditorScreen extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  State<ManagerDepartmentEditorScreen> createState() => _ManagerDepartmentEditorScreenState();
+  State<ManagerDepartmentEditorScreen> createState() =>
+      _ManagerDepartmentEditorScreenState();
 }
 
-class _ManagerDepartmentEditorScreenState extends State<ManagerDepartmentEditorScreen> {
-  final GlobalKey<AnimatedListState> animaListKey = GlobalKey<AnimatedListState>();
+class _ManagerDepartmentEditorScreenState
+    extends State<ManagerDepartmentEditorScreen> {
+  final GlobalKey<AnimatedListState> animaListKey =
+      GlobalKey<AnimatedListState>();
 
   List<File> imgFileList = [];
   List<File> initialImgFileList = [];
@@ -60,9 +62,12 @@ class _ManagerDepartmentEditorScreenState extends State<ManagerDepartmentEditorS
     });
 
     this.animaListKey.currentState?.insertItem(0);
-    this.titleController = TextEditingController(text: widget.departmentEntity?.label ?? "");
-    this.descriptionController = TextEditingController(text: widget.departmentEntity?.description ?? "");
-    this.addressController = TextEditingController(text: widget.departmentEntity?.address ?? "");
+    this.titleController =
+        TextEditingController(text: widget.departmentEntity?.label ?? "");
+    this.descriptionController =
+        TextEditingController(text: widget.departmentEntity?.description ?? "");
+    this.addressController =
+        TextEditingController(text: widget.departmentEntity?.address ?? "");
 
     if (widget.departmentEntity != null) {
       if (widget.departmentEntity?.begin != null) {
@@ -76,8 +81,10 @@ class _ManagerDepartmentEditorScreenState extends State<ManagerDepartmentEditorS
     }
 
     setState(() {
-      this.fromDateController = TextEditingController(text: this.getFromDateTextValue());
-      this.untilDateController = TextEditingController(text: this.getUntilDateTextValue());
+      this.fromDateController =
+          TextEditingController(text: this.getFromDateTextValue());
+      this.untilDateController =
+          TextEditingController(text: this.getUntilDateTextValue());
     });
 
     this._downloadAndLoadImagesFromCache();
@@ -87,7 +94,8 @@ class _ManagerDepartmentEditorScreenState extends State<ManagerDepartmentEditorS
   Future<void> _cropImage(BuildContext context, int imgIndex) async {
     ThemeData themeData = Theme.of(context);
 
-    CroppedFile? cropped = await ImageCropper().cropImage(sourcePath: this.imgFileList[imgIndex].path, uiSettings: [
+    CroppedFile? cropped = await ImageCropper()
+        .cropImage(sourcePath: this.imgFileList[imgIndex].path, uiSettings: [
       AndroidUiSettings(
           toolbarTitle: 'Bild bearbeiten',
           statusBarColor: themeData.colorScheme.inversePrimary,
@@ -121,15 +129,19 @@ class _ManagerDepartmentEditorScreenState extends State<ManagerDepartmentEditorS
         create: (context) => serviceLocator<DepartmentsControllerBloc>(),
         child: SingleChildScrollView(
           physics: const BouncingScrollPhysics(),
-          child: BlocConsumer<DepartmentsControllerBloc, DepartmentsControllerState>(
+          child: BlocConsumer<DepartmentsControllerBloc,
+              DepartmentsControllerState>(
             listener: (context, state) {
               if (state.failureOrSuccessOption.isSome()) {
-                AutoRouter.of(context).popUntil((route) => route.settings.name == ManagerOverviewDepartmentRoute.name);
+                AutoRouter.of(context).popUntil((route) =>
+                    route.settings.name == ManagerOverviewDepartmentRoute.name);
               }
             },
             builder: (context, state) {
               return Padding(
-                padding: CoreSpacingConstants.getCoreBodyContentPaddingHorizontal(size),
+                padding:
+                    CoreSpacingConstants.getCoreBodyContentPaddingHorizontal(
+                        size),
                 child: Column(
                   children: [
                     const SizedBox(
@@ -178,14 +190,18 @@ class _ManagerDepartmentEditorScreenState extends State<ManagerDepartmentEditorS
                                       dashPattern: const [8, 4],
                                       child: InkWell(
                                         onTap: () async {
-                                          await this._showImageSelectionChoiceDialog(context);
+                                          await this
+                                              ._showImageSelectionChoiceDialog(
+                                                  context);
                                         },
                                         child: SizedBox(
                                           height: double.maxFinite,
                                           width: double.maxFinite,
                                           child: Column(
-                                            mainAxisAlignment: MainAxisAlignment.center,
-                                            crossAxisAlignment: CrossAxisAlignment.center,
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.center,
                                             children: const [
                                               Icon(
                                                 Icons.upload,
@@ -259,7 +275,8 @@ class _ManagerDepartmentEditorScreenState extends State<ManagerDepartmentEditorS
                                   DateTime? newFromDate = await showDatePicker(
                                     locale: Locale("de"),
                                     context: context,
-                                    initialDate: this.fromDate ?? DateTime.now(),
+                                    initialDate:
+                                        this.fromDate ?? DateTime.now(),
                                     firstDate: DateTime.now(),
                                     lastDate: this.untilDate ?? DateTime(2300),
                                   );
@@ -268,7 +285,8 @@ class _ManagerDepartmentEditorScreenState extends State<ManagerDepartmentEditorS
                                   setState(() {
                                     fromDateSelected = true;
                                     this.fromDate = newFromDate;
-                                    this.fromDateController.text = this.getFromDateTextValue();
+                                    this.fromDateController.text =
+                                        this.getFromDateTextValue();
                                   });
                                 },
                                 child: TextField(
@@ -278,7 +296,8 @@ class _ManagerDepartmentEditorScreenState extends State<ManagerDepartmentEditorS
                                   focusNode: FocusNode(),
                                   enabled: false,
                                   decoration: InputDecoration(
-                                    labelStyle: TextStyle(color: themeData.colorScheme.primary),
+                                    labelStyle: TextStyle(
+                                        color: themeData.colorScheme.primary),
                                     labelText: "Beginn",
                                     border: OutlineInputBorder(
                                       borderRadius: BorderRadius.circular(5),
@@ -297,7 +316,8 @@ class _ManagerDepartmentEditorScreenState extends State<ManagerDepartmentEditorS
                                   DateTime? newUntilDate = await showDatePicker(
                                     locale: Locale("de"),
                                     context: context,
-                                    initialDate: this.untilDate ?? this.fromDate!,
+                                    initialDate:
+                                        this.untilDate ?? this.fromDate!,
                                     firstDate: this.fromDate!,
                                     lastDate: DateTime(2300),
                                   );
@@ -306,7 +326,8 @@ class _ManagerDepartmentEditorScreenState extends State<ManagerDepartmentEditorS
                                   setState(() {
                                     this.untilDateSelected = true;
                                     this.untilDate = newUntilDate;
-                                    this.untilDateController.text = this.getUntilDateTextValue();
+                                    this.untilDateController.text =
+                                        this.getUntilDateTextValue();
                                   });
                                 },
                                 child: TextField(
@@ -315,7 +336,8 @@ class _ManagerDepartmentEditorScreenState extends State<ManagerDepartmentEditorS
                                   autofocus: true,
                                   enabled: false,
                                   decoration: InputDecoration(
-                                    labelStyle: TextStyle(color: themeData.colorScheme.primary),
+                                    labelStyle: TextStyle(
+                                        color: themeData.colorScheme.primary),
                                     labelText: "Ende",
                                     border: OutlineInputBorder(
                                       borderRadius: BorderRadius.circular(5),
@@ -344,7 +366,8 @@ class _ManagerDepartmentEditorScreenState extends State<ManagerDepartmentEditorS
                         InkWell(
                           onTap: () {
                             FocusScope.of(context).unfocus();
-                            AutoRouter.of(context).push(ManagerAdressMapRoute(controller: this.addressController));
+                            AutoRouter.of(context).push(ManagerAdressMapRoute(
+                                controller: this.addressController));
                           },
                           child: TextField(
                             style: themeData.textTheme.headline6?.copyWith(
@@ -358,7 +381,8 @@ class _ManagerDepartmentEditorScreenState extends State<ManagerDepartmentEditorS
                                 color: themeData.colorScheme.primary,
                               ),
                               labelText: "Adresse",
-                              labelStyle: TextStyle(color: themeData.colorScheme.primary),
+                              labelStyle: TextStyle(
+                                  color: themeData.colorScheme.primary),
                               border: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(5),
                               ),
@@ -385,14 +409,16 @@ class _ManagerDepartmentEditorScreenState extends State<ManagerDepartmentEditorS
                         //   }
                         // }
                         if (widget.departmentEntity == null) {
-                          DepartmentEntity depart = DepartmentEntity.empty().copyWith(
+                          DepartmentEntity depart =
+                              DepartmentEntity.empty().copyWith(
                             label: this.titleController.text,
                             description: this.descriptionController.text,
                             address: this.addressController.text,
                             begin: this.fromDate,
                             end: this.untilDate,
                           );
-                          BlocProvider.of<DepartmentsControllerBloc>(context).add(DepartmentsControllerEvent.createDepartment(
+                          BlocProvider.of<DepartmentsControllerBloc>(context)
+                              .add(DepartmentsControllerEvent.createDepartment(
                             departmentEntity: depart,
                             imageFileList: this.imgFileList,
                           ));
@@ -402,7 +428,8 @@ class _ManagerDepartmentEditorScreenState extends State<ManagerDepartmentEditorS
                           // Foto Taken
                           // Removed
 
-                          DepartmentEntity depart = widget.departmentEntity?.copyWith(
+                          DepartmentEntity depart =
+                              widget.departmentEntity?.copyWith(
                             label: this.titleController.text,
                             description: this.descriptionController.text,
                             address: this.addressController.text,
@@ -410,7 +437,8 @@ class _ManagerDepartmentEditorScreenState extends State<ManagerDepartmentEditorS
                             end: this.untilDate,
                           ) as DepartmentEntity;
 
-                          BlocProvider.of<DepartmentsControllerBloc>(context).add(DepartmentsControllerEvent.updateDepartment(
+                          BlocProvider.of<DepartmentsControllerBloc>(context)
+                              .add(DepartmentsControllerEvent.updateDepartment(
                             departmentEntity: depart,
                             imageFileList: this.imgFileList,
                           ));
@@ -433,11 +461,15 @@ class _ManagerDepartmentEditorScreenState extends State<ManagerDepartmentEditorS
   }
 
   String getFromDateTextValue() {
-    return fromDateSelected ? '${fromDate?.day}.${fromDate?.month}.${fromDate?.year}' : "Beliebig";
+    return fromDateSelected
+        ? DateFormat('dd.MM.yyyy').format(this.fromDate!).toString()
+        : "Beliebig";
   }
 
   String getUntilDateTextValue() {
-    return untilDateSelected && untilDate != null ? '${untilDate?.day}.${untilDate?.month}.${untilDate?.year}' : "Beliebig";
+    return untilDateSelected && this.untilDate != null
+        ? DateFormat('dd.MM.yyyy').format(this.untilDate!).toString()
+        : "Beliebig";
   }
 
   _downloadAndLoadImagesFromCache() async {
@@ -447,9 +479,8 @@ class _ManagerDepartmentEditorScreenState extends State<ManagerDepartmentEditorS
       int len = widget.departmentEntity?.images.length as int;
 
       for (int i = 0; i < len; i++) {
-        loadedFiles.add(await DefaultCacheManager().getSingleFile(widget.departmentEntity?.images[i] as String));
-        print("JJJ");
-        print(loadedFiles.length);
+        loadedFiles.add(await DefaultCacheManager()
+            .getSingleFile(widget.departmentEntity?.images[i] as String));
       }
       int lastIndex = imgFileList.length;
       setState(() {
@@ -488,7 +519,8 @@ class _ManagerDepartmentEditorScreenState extends State<ManagerDepartmentEditorS
 
   _openCamera() async {
     try {
-      PickedFile? pic = (await ImagePicker.platform.pickImage(source: ImageSource.camera));
+      PickedFile? pic =
+          (await ImagePicker.platform.pickImage(source: ImageSource.camera));
       if (pic == null) {
         return;
       }
@@ -613,12 +645,18 @@ class _ManagerDepartmentEditorScreenState extends State<ManagerDepartmentEditorS
                       child: this.currentIndex == index
                           ? InkWell(
                               onTap: () async {
-                                this._controller.animateToPage(index, curve: Curves.easeIn, duration: const Duration(milliseconds: 100));
+                                this._controller.animateToPage(index,
+                                    curve: Curves.easeIn,
+                                    duration:
+                                        const Duration(milliseconds: 100));
                               },
                               child: Container(
                                 decoration: BoxDecoration(
-                                    borderRadius: const BorderRadius.all(Radius.circular(10)),
-                                    border: Border.all(width: 2, color: themeData.colorScheme.primary)),
+                                    borderRadius: const BorderRadius.all(
+                                        Radius.circular(10)),
+                                    border: Border.all(
+                                        width: 2,
+                                        color: themeData.colorScheme.primary)),
                                 height: double.maxFinite,
                                 width: double.maxFinite,
                                 child: Padding(
@@ -636,12 +674,16 @@ class _ManagerDepartmentEditorScreenState extends State<ManagerDepartmentEditorS
                           : DottedBorder(
                               borderType: BorderType.RRect,
                               radius: const Radius.circular(12),
-                              color: themeData.colorScheme.secondary.withOpacity(0.8),
+                              color: themeData.colorScheme.secondary
+                                  .withOpacity(0.8),
                               strokeWidth: 2,
                               dashPattern: const [8, 4],
                               child: InkWell(
                                 onTap: () async {
-                                  this._controller.animateToPage(index, curve: Curves.easeIn, duration: const Duration(milliseconds: 100));
+                                  this._controller.animateToPage(index,
+                                      curve: Curves.easeIn,
+                                      duration:
+                                          const Duration(milliseconds: 100));
                                 },
                                 child: SizedBox(
                                   height: double.maxFinite,
@@ -663,7 +705,8 @@ class _ManagerDepartmentEditorScreenState extends State<ManagerDepartmentEditorS
                   top: -14,
                   right: -20,
                   child: TextButton(
-                    style: TextButton.styleFrom(foregroundColor: themeData.colorScheme.inverseSurface),
+                    style: TextButton.styleFrom(
+                        foregroundColor: themeData.colorScheme.inverseSurface),
                     onPressed: () {
                       setState(() {
                         this.removeItem(index);

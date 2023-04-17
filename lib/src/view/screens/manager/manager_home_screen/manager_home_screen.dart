@@ -17,18 +17,20 @@ class ManagerHomeScreen extends StatelessWidget {
 
 
     return Scaffold(
-      // floatingActionButton: FloatingActionButton(
-      //   child: Icon(Icons.refresh),
-      //   onPressed: () {
-      //     final provider = BlocProvider.of<ThemeModeBloc>(context);
-      //
-      //     if (provider.state.themeMode == ThemeMode.dark) {
-      //       provider.add(const ThemeModeEvent.ThemeModeLightSelectEvent());
-      //     } else {
-      //       provider.add(const ThemeModeEvent.ThemeModeDarkSelectEvent());
-      //     }
-      //   },
-      // ),
+      //TODO: REMOVE THIS ONE
+      floatingActionButton: FloatingActionButton(
+        heroTag: "Test",
+        child: Icon(Icons.refresh),
+        onPressed: () {
+          final provider = BlocProvider.of<ThemeModeBloc>(context);
+
+          if (provider.state.themeMode == ThemeMode.dark) {
+            provider.add(const ThemeModeEvent.ThemeModeLightSelectEvent());
+          } else {
+            provider.add(const ThemeModeEvent.ThemeModeDarkSelectEvent());
+          }
+        },
+      ),
       body: const ManagerHomeScreenBody(),
     );
   }

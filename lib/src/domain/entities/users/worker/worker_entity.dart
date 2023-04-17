@@ -10,9 +10,13 @@ class WorkerEntity extends UserEntity {
   final List<String> docs;
   final List<DepartmentEntity> assignedDeparts;
   final DateTime? createdAt;
+  final DateTime? validUntil;
   final DateTime? birthDate;
   final DocumentReference? manager;
   final String? profileImage;
+  final String description;
+  final String preference;
+  final int maxWorkDays;
 
   WorkerEntity({
     required UniqueId id,
@@ -27,6 +31,10 @@ class WorkerEntity extends UserEntity {
     required this.assignedDeparts,
     required this.birthDate,
     required this.createdAt,
+    required this.validUntil,
+    required this.description,
+    required this.preference,
+    required this.maxWorkDays,
   }) : super(id: id, role: role, email: email, phone: phoneNumber);
 
   factory WorkerEntity.empty() => WorkerEntity(
@@ -42,5 +50,47 @@ class WorkerEntity extends UserEntity {
         manager: null,
         role: 'worker',
         email: '',
+        validUntil: null,
+        description: '',
+        preference: '',
+        maxWorkDays: 15,
       );
+
+  WorkerEntity copyWith({
+    UniqueId? id,
+    String? role,
+    String? email,
+    String? phoneNumber,
+    String? forename,
+    String? surname,
+    List<String>? docs,
+    List<DepartmentEntity>? assignedDeparts,
+    DateTime? createdAt,
+    DateTime? validUntil,
+    DateTime? birthDate,
+    DocumentReference? manager,
+    String? profileImage,
+    String? description,
+    String? preference,
+    int? maxWorkDays,
+  }) {
+    return WorkerEntity(
+      id: id ?? this.id,
+      role: role ?? this.role,
+      phoneNumber: phoneNumber ?? this.phone,
+      email: email ?? this.email,
+      forename: forename ?? this.forename,
+      surname: surname ?? this.surname,
+      docs: docs ?? this.docs,
+      assignedDeparts: assignedDeparts ?? this.assignedDeparts,
+      createdAt: createdAt ?? this.createdAt,
+      validUntil: validUntil ?? this.validUntil,
+      birthDate: birthDate ?? this.birthDate,
+      manager: manager ?? this.manager,
+      profileImage: profileImage ?? this.profileImage,
+      description: description ?? this.description,
+      preference: preference ?? this.preference,
+      maxWorkDays: maxWorkDays ?? this.maxWorkDays,
+    );
+  }
 }

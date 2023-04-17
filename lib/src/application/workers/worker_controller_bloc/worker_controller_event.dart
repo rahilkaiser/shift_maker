@@ -4,6 +4,7 @@ part of 'worker_controller_bloc.dart';
 class WorkerControllerEvent with _$WorkerControllerEvent {
   const factory WorkerControllerEvent.createWorker({
     required WorkerEntity workerEntity,
+    required File? profileImage,
   }) = CreateWorker;
 
   const factory WorkerControllerEvent.deleteWorker({

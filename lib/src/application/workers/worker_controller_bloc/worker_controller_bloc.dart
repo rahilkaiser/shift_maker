@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:bloc/bloc.dart';
 import 'package:dartz/dartz.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
@@ -17,8 +19,14 @@ class WorkerControllerBloc extends Bloc<WorkerControllerEvent, WorkerControllerS
   final WorkerRepo workerRepo;
 
   WorkerControllerBloc({required this.workerRepo}) : super(WorkerControllerState.initial()) {
-    on<CreateWorker>((event, emit) {
-      // TODO: implement event handler
+    on<CreateWorker>((event, emit) async {
+      emit(state.copyWith(isLoading: true));
+
+      Either<WorkerFailure, Unit> failureOrUnit = await this.workerRepo.create(
+            event.workerEntity,
+            event.profileImage,
+          );
+      emit(state.copyWith(isLoading: false));
     });
     on<UpdateWorker>((event, emit) {
       // TODO: implement event handler

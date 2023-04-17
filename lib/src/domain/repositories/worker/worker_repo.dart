@@ -19,7 +19,7 @@ abstract class WorkerRepo {
   /// Creates a new Worker
   ///
   ///
-  Future<Either<WorkerFailure,Unit>> create(WorkerEntity workerEntity);
+  Future<Either<WorkerFailure,Unit>> create(WorkerEntity workerEntity, File? image);
 
   /// Updates a Worker
   ///

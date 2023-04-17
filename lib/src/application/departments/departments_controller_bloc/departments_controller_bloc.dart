@@ -42,5 +42,7 @@ class DepartmentsControllerBloc extends Bloc<DepartmentsControllerEvent, Departm
 
       emit(state.copyWith(isLoading: false, failureOrSuccessOption: optionOf(failureOrDepart)));
     });
+
+
   }
 }

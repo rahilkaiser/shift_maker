@@ -1,4 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:cloud_functions/cloud_functions.dart';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:get_it/get_it.dart';
@@ -58,6 +60,7 @@ Future<void> registerStateManagementDependencies() async {
 
 Future<void> registerRepositoryDependencies() async {
   serviceLocator.registerLazySingleton<WorkerRepo>(() => WorkerRepoImpl(
+        firebaseFunctions: serviceLocator(),
         firestore: serviceLocator(),
         firebaseStorage: serviceLocator(),
       ));
@@ -88,4 +91,7 @@ Future<void> registerExtDependencies() async {
 
   final firebaseAuth = FirebaseAuth.instance;
   serviceLocator.registerLazySingleton(() => firebaseAuth);
+
+  final firebaseFunctions = FirebaseFunctions.instanceFor(region: 'europe-west3');
+  serviceLocator.registerLazySingleton(() => firebaseFunctions);
 }
