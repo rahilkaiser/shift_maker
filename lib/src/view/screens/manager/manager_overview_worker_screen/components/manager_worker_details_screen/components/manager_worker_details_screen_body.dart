@@ -58,12 +58,13 @@ class _ManagerWorkerDetailsScreenBodyState extends State<ManagerWorkerDetailsScr
                             Center(
                               child: Padding(
                                 padding: const EdgeInsets.all(8.0),
-                                child: CachedNetworkImage(
-                                  fit: BoxFit.contain,
-                                  imageUrl:
-                                      "https://firebasestorage.googleapis.com/v0/b/shiftmaker-d0904.appspot.com/o/CiIpp7BPk3Z36iIFwpk3zTnwm813%2Fdepartments%2Fa56fa930-855b-11ed-b6db-51b88687fc5a%2Fimage_picker2152901276822235240.jpg?alt=media&token=143d69c7-8ac9-414c-82e0-0820488c6c40",
-                                  placeholder: (context, url) => const Center(child: CircularProgressIndicator()),
-                                ),
+                                child: widget.worker.profileImage != null
+                                    ? CachedNetworkImage(
+                                        fit: BoxFit.contain,
+                                        imageUrl: widget.worker.profileImage!,
+                                        placeholder: (context, url) => const Center(child: CircularProgressIndicator()),
+                                      )
+                                    : Icon(Icons.account_circle_rounded, size: 115, color: themeData.colorScheme.secondary),
                               ),
                             ),
                           ],
@@ -72,15 +73,15 @@ class _ManagerWorkerDetailsScreenBodyState extends State<ManagerWorkerDetailsScr
                       context: context,
                     );
                   },
-                  child: CachedNetworkImage(
-                    width: 115,
-                    height: 115,
-                    fit: BoxFit.cover,
-                    imageUrl:
-                        "https://firebasestorage.googleapis.com/v0/b/shiftmaker-d0904.appspot.com/o/CiIpp7BPk3Z36iIFwpk3zTnwm813%2Fdepartments%2Fa56fa930-855b-11ed-b6db-51b88687fc5a%2Fimage_picker2152901276822235240.jpg?alt=media&token=143d69c7-8ac9-414c-82e0-0820488c6c40",
-                    // "https://firebasestorage.googleapis.com/v0/b/shiftmaker-d0904.appspot.com/o/eISvZ2RWOGYfe423K7GTzBmtNco1%2Fusers%2FRuJKJAXEksP90m3ZhqguNp1H07x2%2FVinceTest.jpg?alt=media&token=6bd172cc-f177-4814-9517-f1eb79ed02af",
-                    placeholder: (context, url) => const Center(child: CircularProgressIndicator()),
-                  ),
+                  child: widget.worker.profileImage != null
+                      ? CachedNetworkImage(
+                          width: 115,
+                          height: 115,
+                          fit: BoxFit.cover,
+                          imageUrl: widget.worker.profileImage!,
+                          placeholder: (context, url) => const Center(child: CircularProgressIndicator()),
+                        )
+                      : Icon(Icons.account_circle_rounded, size: 115, color: themeData.colorScheme.secondary),
                 ),
               ),
             ),
@@ -97,10 +98,7 @@ class _ManagerWorkerDetailsScreenBodyState extends State<ManagerWorkerDetailsScr
             RichText(
               softWrap: true,
               text: TextSpan(
-                text: "„Lorem ipsum dolor sit amet, consectetur adipisici elit, …“ "
-                    "ist ein Blindtext, der nichts bedeuten soll, "
-                    "sondern als Platzhalter im Layout verwendet wird,"
-                    " um einen Eindruck vom fertigen Dokument zu erhalten. Wikipedia",
+                text: widget.worker.description,
                 style: themeData.textTheme.headline5?.copyWith(
                   fontSize: 13,
                   color: themeData.hintColor.withOpacity(0.9),
@@ -135,12 +133,9 @@ class _ManagerWorkerDetailsScreenBodyState extends State<ManagerWorkerDetailsScr
                 ),
                 const SizedBox(width: 5),
                 RichText(
-                  text: TextSpan(
-                      text: "23",
-                      style: themeData.textTheme.bodyText2?.copyWith(color: Colors.green, fontWeight: FontWeight.w500),
-                      children: [
-                        TextSpan(text: "/27", style: themeData.textTheme.bodyText2),
-                      ]),
+                  text: TextSpan(text: "23", style: themeData.textTheme.bodyText2?.copyWith(color: Colors.green, fontWeight: FontWeight.w500), children: [
+                    TextSpan(text: "/27", style: themeData.textTheme.bodyText2),
+                  ]),
                 ),
               ],
             ),
@@ -227,74 +222,88 @@ class _ManagerWorkerDetailsScreenBodyState extends State<ManagerWorkerDetailsScr
             SizedBox(
               height: 15,
             ),
-            FittedBox(
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Row(
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Expanded(
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      const Icon(
-                        Icons.calendar_month,
-                        size: 15,
-                      ),
-                      const SizedBox(width: 5),
-                      RichText(
-                        overflow: TextOverflow.ellipsis,
-                        maxLines: 2,
-                        text: TextSpan(
-                          text: "Erstellt am",
-                          style: themeData.textTheme.bodyText2?.copyWith(
-                            fontWeight: FontWeight.w500,
-                            fontSize: 15,
-                          ),
-                        ),
-                      ),
-                      const SizedBox(width: 5),
-                      RichText(
-                        overflow: TextOverflow.ellipsis,
-                        maxLines: 2,
-                        text: TextSpan(
-                          text: widget.worker.createdAt != null ? DateFormat('dd.MM.yyyy').format(widget.worker.createdAt!).toString() : "-",
-                          style: TextStyle(
-                            fontSize: 15,
-                            color: themeData.colorScheme.secondary,
-                          ),
+                      FittedBox(
+                        child: Row(
+                          children: [
+                            const Icon(
+                              Icons.calendar_month,
+                              size: 15,
+                            ),
+                            const SizedBox(width: 5),
+                            RichText(
+                              overflow: TextOverflow.ellipsis,
+                              maxLines: 2,
+                              text: TextSpan(
+                                text: "Erstellt am",
+                                style: themeData.textTheme.bodyText2?.copyWith(
+                                  fontWeight: FontWeight.w500,
+                                  fontSize: 13,
+                                ),
+                              ),
+                            ),
+                            const SizedBox(width: 5),
+                            RichText(
+                              overflow: TextOverflow.ellipsis,
+                              maxLines: 2,
+                              text: TextSpan(
+                                text: widget.worker.createdAt != null ? DateFormat('dd.MM.yyyy').format(widget.worker.createdAt!).toString() : "-",
+                                style: TextStyle(
+                                  fontSize: 13,
+                                  color: themeData.colorScheme.secondary,
+                                ),
+                              ),
+                            ),
+                          ],
                         ),
                       ),
                     ],
                   ),
-                  const SizedBox(
-                    width: 15,
-                  ),
-                  Row(
-                    children: [
-                      RichText(
-                        overflow: TextOverflow.ellipsis,
-                        maxLines: 2,
-                        text: TextSpan(
-                          text: "Gültig bis",
-                          style: themeData.textTheme.bodyText2?.copyWith(
-                            fontWeight: FontWeight.w500,
-                            fontSize: 15,
+                ),
+                const SizedBox(
+                  width: 15,
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    FittedBox(
+                      child: Row(
+                        children: [
+                          RichText(
+                            overflow: TextOverflow.ellipsis,
+                            maxLines: 2,
+                            text: TextSpan(
+                              text: "Gültig bis",
+                              style: themeData.textTheme.bodyText2?.copyWith(
+                                fontWeight: FontWeight.w500,
+                                fontSize: 13,
+                              ),
+                            ),
                           ),
-                        ),
-                      ),
-                      SizedBox(width: 5),
-                      RichText(
-                        overflow: TextOverflow.ellipsis,
-                        maxLines: 2,
-                        text: TextSpan(
-                          text: widget.worker.birthDate != null ? DateFormat('dd.MM.yyyy').format(widget.worker.createdAt!).toString() : "-",
-                          style: TextStyle(
-                            fontSize: 15,
-                            color: themeData.colorScheme.secondary,
+                          SizedBox(width: 5),
+                          RichText(
+                            overflow: TextOverflow.ellipsis,
+                            maxLines: 2,
+                            text: TextSpan(
+                              text: widget.worker.createdAt != null ? DateFormat('dd.MM.yyyy').format(widget.worker.createdAt!).toString() : "-",
+                              style: TextStyle(
+                                fontSize: 13,
+                                color: themeData.colorScheme.secondary,
+                              ),
+                            ),
                           ),
-                        ),
+                        ],
                       ),
-                    ],
-                  ),
-                ],
-              ),
+                    ),
+                  ],
+                ),
+              ],
             ),
             SizedBox(
               height: 15,
@@ -309,13 +318,13 @@ class _ManagerWorkerDetailsScreenBodyState extends State<ManagerWorkerDetailsScr
                       const SizedBox(width: 8),
                       InkWell(
                         onLongPress: () {
-                          Clipboard.setData(ClipboardData(text: widget.worker.phone));
+                          Clipboard.setData(ClipboardData(text: widget.worker.phoneNumber));
                         },
                         child: RichText(
                           overflow: TextOverflow.ellipsis,
                           maxLines: 1,
                           text: TextSpan(
-                            text: widget.worker.phone,
+                            text: widget.worker.phoneNumber,
                             style: themeData.textTheme.headline5?.copyWith(fontSize: 15, fontWeight: FontWeight.w300),
                           ),
                         ),
@@ -327,7 +336,7 @@ class _ManagerWorkerDetailsScreenBodyState extends State<ManagerWorkerDetailsScr
                   // color: themeData.colorScheme.primary,
                   onPressed: () {
                     launchUrl(
-                      Uri(scheme: 'tel', path: widget.worker.phone),
+                      Uri(scheme: 'tel', path: widget.worker.phoneNumber),
                     );
                   },
                   icon: Icon(
@@ -339,7 +348,7 @@ class _ManagerWorkerDetailsScreenBodyState extends State<ManagerWorkerDetailsScr
                   // color: themeData.colorScheme.primary,
                   onPressed: () {
                     launchUrl(
-                      Uri.parse("https://wa.me/${widget.worker.phone}?text="),
+                      Uri.parse("https://wa.me/${widget.worker.phoneNumber}?text="),
                       mode: LaunchMode.externalApplication,
                     );
                     // lau

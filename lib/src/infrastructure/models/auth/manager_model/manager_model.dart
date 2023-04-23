@@ -6,10 +6,10 @@ import '../../../../domain/entities/users/manager/manager_entity.dart';
 
 class ManagerModel {
   final String id;
-  final String email;
+  final String? email;
   final String name;
   final String role;
-  final String phone;
+  final String? phoneNumber;
   final dynamic serverTimeStamp;
 
   ManagerModel({
@@ -17,7 +17,7 @@ class ManagerModel {
     required this.email,
     required this.name,
     required this.role,
-    required this.phone,
+    required this.phoneNumber,
     this.serverTimeStamp,
   });
 
@@ -33,7 +33,7 @@ class ManagerModel {
       email: this.email,
       name: this.name,
       role: this.role,
-      phone: this.phone,
+      phoneNumber: this.phoneNumber,
     );
   }
 
@@ -42,7 +42,7 @@ class ManagerModel {
       id: managerEntity.id.value,
       email: managerEntity.email,
       name: managerEntity.name,
-      phone: managerEntity.phone,
+      phoneNumber: managerEntity.phoneNumber,
       role: managerEntity.role,
       serverTimeStamp: FieldValue.serverTimestamp(),
     );
@@ -61,7 +61,7 @@ class ManagerModel {
       email: email ?? this.email,
       name: name ?? this.name,
       role: role ?? this.role,
-      phone: phone ?? this.phone,
+      phoneNumber: phone ?? this.phoneNumber,
       serverTimeStamp: serverTimeStamp ?? this.serverTimeStamp,
     );
   }
@@ -72,7 +72,7 @@ class ManagerModel {
       'email': this.email,
       'name': this.name,
       'role': this.role,
-      'phoneNumber': this.phone,
+      'phoneNumber': this.phoneNumber,
       'serverTimeStamp': this.serverTimeStamp,
     };
   }
@@ -83,7 +83,7 @@ class ManagerModel {
       email: map['email'] as String,
       name: map['name'] as String,
       role: map['role'] as String,
-      phone: map['phoneNumber'] as String,
+      phoneNumber: map['phoneNumber'] as String,
       serverTimeStamp: map['serverTimeStamp'] as dynamic,
     );
   }

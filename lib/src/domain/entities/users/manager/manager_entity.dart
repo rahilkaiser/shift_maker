@@ -7,13 +7,13 @@ class ManagerEntity extends UserEntity {
   ManagerEntity({
     required UniqueId id,
     required String role,
-    required String email,
-    required String phone,
+    required String? email,
+    required String? phoneNumber,
     required this.name,
   }) : super(
           id: id,
           role: role,
           email: email,
-          phone: phone,
+          phoneNumber: phoneNumber,
         );
 }

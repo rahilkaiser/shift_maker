@@ -7,8 +7,8 @@ import '../../../../domain/entities/users/worker/worker_entity.dart';
 
 class WorkerModel {
   final String id;
-  final String email;
-  final String phoneNumber;
+  final String? email;
+  final String? phoneNumber;
   final String forename;
   final String surname;
   final String role;
@@ -18,7 +18,7 @@ class WorkerModel {
   final List<String> docs;
   final List<DepartmentEntity> assignedDeparts;
   final DocumentReference? manager;
-  final String description;
+  final String? description;
   final String preference;
   final DateTime? validUntil;
   final int maxWorkDays;
@@ -73,7 +73,7 @@ class WorkerModel {
     return WorkerModel(
       id: workerEntity.id.value,
       email: workerEntity.email,
-      phoneNumber: workerEntity.phone,
+      phoneNumber: workerEntity.phoneNumber,
       forename: workerEntity.forename,
       surname: workerEntity.surname,
       serverTimeStamp: FieldValue.serverTimestamp(),
@@ -144,7 +144,7 @@ class WorkerModel {
       'docs': this.docs,
       'assignedDeparts': this.assignedDeparts,
       'manager': this.manager,
-      'serverTimeStamp': this.serverTimeStamp,
+      // 'serverTimeStamp': this.serverTimeStamp,
       'preference': this.preference,
       'description': this.description,
       'maxWorkDays': this.maxWorkDays,
@@ -159,19 +159,19 @@ class WorkerModel {
 
     return WorkerModel(
       id: "",
-      email: map['email'] as String,
-      phoneNumber: map['phoneNumber'] as String,
+      email: map['email'] as String?,
+      phoneNumber: map['phoneNumber'] as String?,
       forename: map['forename'] as String,
       surname: map['surname'] as String,
       role: map['role'] as String,
-      profileImage: map['profileImage'] as String,
+      profileImage: map['profileImage'] as String?,
       birthDate: birthTmp != null ? DateTime.fromMicrosecondsSinceEpoch(birthTmp.microsecondsSinceEpoch) : null,
       createdAt: createdAtTmp != null ? DateTime.fromMicrosecondsSinceEpoch(createdAtTmp.microsecondsSinceEpoch) : null,
       docs: List.from(map['docs']),
       assignedDeparts: [],
       manager: map['manager'] as DocumentReference,
       validUntil: validUntilTmp != null ? DateTime.fromMicrosecondsSinceEpoch(validUntilTmp.microsecondsSinceEpoch) : null,
-      description: map['description'] as String,
+      description: map['description'] as String?,
       preference: map['preference'] as String,
       maxWorkDays: map['maxWorkDays'] as int,
       serverTimeStamp: map['serverTimeStamp'] as dynamic,

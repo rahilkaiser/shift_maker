@@ -19,6 +19,7 @@ class ManagerOverviewWorkerScreenBody extends StatelessWidget {
   Widget build(BuildContext context) {
     final themeData = Theme.of(context);
     Size size = MediaQuery.of(context).size;
+    String maxDays = getMaxDaysInCurrentMonth();
     return CustomScrollView(
       physics: const BouncingScrollPhysics(),
       shrinkWrap: true,
@@ -47,14 +48,15 @@ class ManagerOverviewWorkerScreenBody extends StatelessWidget {
                     child: ListTile(
                       leading: ClipRRect(
                         borderRadius: BorderRadius.circular(60),
-                        child: CachedNetworkImage(
-                          width: 50,
-                          height: 50,
-                          fit: BoxFit.cover,
-                          imageUrl:
-                              "https://firebasestorage.googleapis.com/v0/b/shiftmaker-d0904.appspot.com/o/CiIpp7BPk3Z36iIFwpk3zTnwm813%2Fdepartments%2Fa56fa930-855b-11ed-b6db-51b88687fc5a%2Fimage_picker2152901276822235240.jpg?alt=media&token=143d69c7-8ac9-414c-82e0-0820488c6c40",
-                          placeholder: (context, url) => const Center(child: CircularProgressIndicator()),
-                        ),
+                        child: state.workerEntities[index].profileImage != null
+                            ? CachedNetworkImage(
+                                width: 50,
+                                height: 50,
+                                fit: BoxFit.cover,
+                                imageUrl: state.workerEntities[index].profileImage!,
+                                placeholder: (context, url) => const Center(child: CircularProgressIndicator()),
+                              )
+                            : Icon(Icons.account_circle_rounded, size: 50, color: themeData.colorScheme.secondary),
                       ),
                       title: Text("${state.workerEntities[index].forename} ${state.workerEntities[index].surname}"),
                       subtitle: Column(
@@ -70,7 +72,7 @@ class ManagerOverviewWorkerScreenBody extends StatelessWidget {
                                       overflow: TextOverflow.ellipsis,
                                       maxLines: 2,
                                       text: TextSpan(
-                                        text: state.workerEntities[index] != null
+                                        text: state.workerEntities[index].createdAt != null
                                             ? DateFormat('dd.MM.yyyy').format(state.workerEntities[index].createdAt!).toString()
                                             : "-",
                                         style: TextStyle(
@@ -104,8 +106,8 @@ class ManagerOverviewWorkerScreenBody extends StatelessWidget {
                                       overflow: TextOverflow.ellipsis,
                                       maxLines: 2,
                                       text: TextSpan(
-                                        text: state.workerEntities[index] != null
-                                            ? DateFormat('dd.MM.yyyy').format(state.workerEntities[index].createdAt!).toString()
+                                        text: state.workerEntities[index].validUntil != null
+                                            ? DateFormat('dd.MM.yyyy').format(state.workerEntities[index].validUntil!).toString()
                                             : "-",
                                         style: TextStyle(
                                           fontSize: 11,
@@ -118,16 +120,15 @@ class ManagerOverviewWorkerScreenBody extends StatelessWidget {
                               ],
                             ),
                           ),
-                          Text("Tagschicht"),
+                          Text(state.workerEntities[index].preference != null ? "${state.workerEntities[index].preference}" : "-"),
                         ],
                       ),
                       trailing: RichText(
-                        text: TextSpan(
-                            text: "23",
-                            style: themeData.textTheme.bodyText2?.copyWith(color: Colors.green, fontWeight: FontWeight.w500),
-                            children: [
-                              TextSpan(text: "/27", style: themeData.textTheme.bodyText2),
-                            ]),
+                        text: TextSpan(text: "23", style: themeData.textTheme.bodyText2?.copyWith(color: Colors.green, fontWeight: FontWeight.w500), children: [
+                          TextSpan(
+                              text: "/" + state.workerEntities[index].preference != null ? "${state.workerEntities[index].maxWorkDays}" : maxDays,
+                              style: themeData.textTheme.bodyText2),
+                        ]),
                       ),
                     ),
                   ),
@@ -161,5 +162,11 @@ class ManagerOverviewWorkerScreenBody extends StatelessWidget {
         )
       ],
     );
+  }
+
+  String getMaxDaysInCurrentMonth() {
+    final now = DateTime.now();
+    final lastDayOfMonth = DateTime(now.year, now.month + 1, 0);
+    return lastDayOfMonth.day.toString();
   }
 }

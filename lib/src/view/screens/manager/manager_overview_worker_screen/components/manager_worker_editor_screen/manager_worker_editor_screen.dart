@@ -82,7 +82,9 @@ class _ManagerWorkerEditorScreenState extends State<ManagerWorkerEditorScreen> {
     this.preferenceController = TextEditingController(text: widget.worker?.preference ?? "");
     this.descriptionController = TextEditingController(text: widget.worker?.description ?? "");
     this.emailController = TextEditingController(text: widget.worker?.email ?? "");
-    this.workDaysPerMonthCapController = TextEditingController(text: widget.worker?.maxWorkDays.toString() ?? "0");
+
+    String maxDays = getMaxDaysInCurrentMonth();
+    this.workDaysPerMonthCapController = TextEditingController(text: widget.worker?.maxWorkDays.toString() ?? maxDays);
 
     this.phoneNumberController = TextEditingController(text: "");
 
@@ -107,7 +109,7 @@ class _ManagerWorkerEditorScreenState extends State<ManagerWorkerEditorScreen> {
   }
 
   _setUpPhone() async {
-    this.currentPhone = (await PhoneNumber.getRegionInfoFromPhoneNumber(widget.worker?.phone ?? ""));
+    this.currentPhone = (await PhoneNumber.getRegionInfoFromPhoneNumber(widget.worker?.phoneNumber ?? ""));
     setState(() {
       this.phoneNumberController.text = this.currentPhone.parseNumber();
     });
@@ -128,6 +130,12 @@ class _ManagerWorkerEditorScreenState extends State<ManagerWorkerEditorScreen> {
       });
       this.initialImgFile = loadedFile;
     }
+  }
+
+  String getMaxDaysInCurrentMonth() {
+    final now = DateTime.now();
+    final lastDayOfMonth = DateTime(now.year, now.month + 1, 0);
+    return lastDayOfMonth.day.toString();
   }
 
   @override
@@ -327,10 +335,7 @@ class _ManagerWorkerEditorScreenState extends State<ManagerWorkerEditorScreen> {
                           keyboardType: const TextInputType.numberWithOptions(signed: true, decimal: true),
                           initialValue: this.currentPhone,
                           selectorConfig: const SelectorConfig(
-                              selectorType: PhoneInputSelectorType.BOTTOM_SHEET,
-                              setSelectorButtonAsPrefixIcon: false,
-                              leadingPadding: 10,
-                              useEmoji: true),
+                              selectorType: PhoneInputSelectorType.BOTTOM_SHEET, setSelectorButtonAsPrefixIcon: false, leadingPadding: 10, useEmoji: true),
                           autoFocusSearch: true,
                           searchBoxDecoration: InputDecoration(
                             labelText: "Suche nach Landnamen oder Vorwahlziffer",
@@ -493,7 +498,8 @@ class _ManagerWorkerEditorScreenState extends State<ManagerWorkerEditorScreen> {
                             validUntil: this.untilDate,
                           );
 
-                          BlocProvider.of<WorkerControllerBloc>(context).add(WorkerControllerEvent.createWorker(workerEntity: worker, profileImage: this.profileImgFile));
+                          BlocProvider.of<WorkerControllerBloc>(context)
+                              .add(WorkerControllerEvent.createWorker(workerEntity: worker, profileImage: this.profileImgFile));
                         }
                       },
                       text: "Speichern",

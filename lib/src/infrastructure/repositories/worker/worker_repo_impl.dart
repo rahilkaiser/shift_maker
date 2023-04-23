@@ -30,14 +30,12 @@ class WorkerRepoImpl implements WorkerRepo {
 
   @override
   Future<Either<WorkerFailure, Unit>> create(WorkerEntity workerEntity, File? image) async {
-    // FirebaseApp app = await Firebase.initializeApp(name: 'Secondary', options: Firebase.app().options);
-    // await FirebaseAuth.instanceFor(app: app).createUserWithEmailAndPassword(email: workerEntity.email, password: "qqqqqqqq");
-
-    // await app.delete();
     try {
-      HttpsCallable callable = this.firebaseFunctions.httpsCallable("createWorker");
-      final resp = await callable.call(WorkerModel.fromEntity(workerEntity).toMap());
-      print(resp);
+      final managerDocRef = await this.firestore.getCurrentUserDocument();
+      workerEntity.manager = managerDocRef;
+      final workerData = WorkerModel.fromEntity(workerEntity).toMap();
+      DocumentReference docRef = await FirebaseFirestore.instance.collection('workers').add(workerData);
+      await docRef.update({'serverTimeStamp': FieldValue.serverTimestamp()});
     } on FirebaseFunctionsException catch (e) {
       if (e.code == "invalid-argument") {
         return left(WorkerCreateInvalidArgument());
@@ -56,7 +54,6 @@ class WorkerRepoImpl implements WorkerRepo {
 
   @override
   Future<Either<WorkerFailure, Unit>> delete(UniqueId uniqueId) {
-
     // TODO: implement delete
     throw UnimplementedError();
   }

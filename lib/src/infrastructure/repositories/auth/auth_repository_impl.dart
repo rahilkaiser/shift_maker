@@ -61,7 +61,7 @@ class AuthRepositoryImpl implements AuthRepository {
         role: UserRole.MANAGER,
         email: emailAddress,
         name: name,
-        phone: phoneNumber,
+        phoneNumber: phoneNumber,
       );
 
       ManagerModel managerModel = ManagerModel.fromEntity(managerEntity);

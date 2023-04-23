@@ -12,21 +12,21 @@ class WorkerEntity extends UserEntity {
   final DateTime? createdAt;
   final DateTime? validUntil;
   final DateTime? birthDate;
-  final DocumentReference? manager;
+  late  DocumentReference? manager;
   final String? profileImage;
-  final String description;
+  final String? description;
   final String preference;
   final int maxWorkDays;
 
   WorkerEntity({
     required UniqueId id,
     required String role,
-    required String email,
-    required String phoneNumber,
+    required String? email,
+    required String? phoneNumber,
     required this.forename,
     required this.surname,
-    required this.profileImage,
-    required this.manager,
+    required String? this.profileImage,
+    this.manager,
     required this.docs,
     required this.assignedDeparts,
     required this.birthDate,
@@ -35,7 +35,7 @@ class WorkerEntity extends UserEntity {
     required this.description,
     required this.preference,
     required this.maxWorkDays,
-  }) : super(id: id, role: role, email: email, phone: phoneNumber);
+  }) : super(id: id, role: role, email: email, phoneNumber: phoneNumber);
 
   factory WorkerEntity.empty() => WorkerEntity(
         id: UniqueId(),
@@ -77,7 +77,7 @@ class WorkerEntity extends UserEntity {
     return WorkerEntity(
       id: id ?? this.id,
       role: role ?? this.role,
-      phoneNumber: phoneNumber ?? this.phone,
+      phoneNumber: phoneNumber ?? this.phoneNumber,
       email: email ?? this.email,
       forename: forename ?? this.forename,
       surname: surname ?? this.surname,

@@ -22,7 +22,7 @@ extension FirebaseUserMapper on User {
       id: UniqueId.fromUniqueString(uid),
       role: UserRole.MANAGER,
       email: '',
-      phone: '',
+      phoneNumber: '',
     );
     // try {
     //   // Get reference to Firestore collection
