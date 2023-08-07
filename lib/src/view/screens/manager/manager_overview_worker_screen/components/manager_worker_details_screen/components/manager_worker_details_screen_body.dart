@@ -34,6 +34,8 @@ class _ManagerWorkerDetailsScreenBodyState extends State<ManagerWorkerDetailsScr
   Widget build(BuildContext context) {
     final themeData = Theme.of(context);
     Size size = MediaQuery.of(context).size;
+    String maxDays = getMaxDaysInCurrentMonth();
+
     return SingleChildScrollView(
       physics: const BouncingScrollPhysics(),
       child: Padding(
@@ -134,7 +136,7 @@ class _ManagerWorkerDetailsScreenBodyState extends State<ManagerWorkerDetailsScr
                 const SizedBox(width: 5),
                 RichText(
                   text: TextSpan(text: "23", style: themeData.textTheme.bodyText2?.copyWith(color: Colors.green, fontWeight: FontWeight.w500), children: [
-                    TextSpan(text: "/27", style: themeData.textTheme.bodyText2),
+                    TextSpan(text: "/${widget.worker.maxWorkDays != null ? "${widget.worker.maxWorkDays}" : maxDays}", style: themeData.textTheme.bodyText2),
                   ]),
                 ),
               ],
@@ -170,7 +172,7 @@ class _ManagerWorkerDetailsScreenBodyState extends State<ManagerWorkerDetailsScr
                   overflow: TextOverflow.ellipsis,
                   maxLines: 2,
                   text: TextSpan(
-                    text: "Tagschicht",
+                    text: widget.worker.preference != null ? widget.worker.preference : "-",
                     style: TextStyle(
                       fontSize: 15,
                       color: themeData.colorScheme.secondary,
@@ -286,12 +288,12 @@ class _ManagerWorkerDetailsScreenBodyState extends State<ManagerWorkerDetailsScr
                               ),
                             ),
                           ),
-                          SizedBox(width: 5),
+                          const SizedBox(width: 5),
                           RichText(
                             overflow: TextOverflow.ellipsis,
                             maxLines: 2,
                             text: TextSpan(
-                              text: widget.worker.createdAt != null ? DateFormat('dd.MM.yyyy').format(widget.worker.createdAt!).toString() : "-",
+                              text: widget.worker.validUntil != null ? DateFormat('dd.MM.yyyy').format(widget.worker.validUntil!).toString() : "-",
                               style: TextStyle(
                                 fontSize: 13,
                                 color: themeData.colorScheme.secondary,
@@ -305,9 +307,10 @@ class _ManagerWorkerDetailsScreenBodyState extends State<ManagerWorkerDetailsScr
                 ),
               ],
             ),
-            SizedBox(
+            const SizedBox(
               height: 15,
             ),
+            if(widget.worker.phoneNumber != null)
             Row(
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
@@ -361,6 +364,7 @@ class _ManagerWorkerDetailsScreenBodyState extends State<ManagerWorkerDetailsScr
                 ),
               ],
             ),
+            if(widget.worker.email != null)
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -413,7 +417,7 @@ class _ManagerWorkerDetailsScreenBodyState extends State<ManagerWorkerDetailsScr
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(
+                      const Text(
                         'Nächste Schicht :',
                         style: TextStyle(fontWeight: FontWeight.w700, fontSize: 18),
                       ),
@@ -430,17 +434,17 @@ class _ManagerWorkerDetailsScreenBodyState extends State<ManagerWorkerDetailsScr
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            Text(
+                            const Text(
                               'Samstag',
                               style: TextStyle(
                                 fontWeight: FontWeight.w700,
                                 color: Colors.lightGreen,
                               ),
                             ),
-                            SizedBox(
+                            const SizedBox(
                               height: 10,
                             ),
-                            Text(
+                            const Text(
                               '19.03.2022',
                               style: TextStyle(
                                 fontWeight: FontWeight.w700,
@@ -448,7 +452,7 @@ class _ManagerWorkerDetailsScreenBodyState extends State<ManagerWorkerDetailsScr
                                 fontSize: 22,
                               ),
                             ),
-                            SizedBox(
+                            const SizedBox(
                               height: 10,
                             ),
                             Text(
@@ -461,7 +465,7 @@ class _ManagerWorkerDetailsScreenBodyState extends State<ManagerWorkerDetailsScr
                           ],
                         ),
                       ),
-                      SizedBox(
+                      const SizedBox(
                         height: 8,
                       ),
                       TextButton(
@@ -477,7 +481,7 @@ class _ManagerWorkerDetailsScreenBodyState extends State<ManagerWorkerDetailsScr
                                 Text("Dienstplan ansehen"),
                               ],
                             ),
-                            Icon(Icons.keyboard_arrow_right)
+                            const Icon(Icons.keyboard_arrow_right)
                           ],
                         ),
                         onPressed: () {},
@@ -512,7 +516,7 @@ class _ManagerWorkerDetailsScreenBodyState extends State<ManagerWorkerDetailsScr
                               Text("Urlaubsanträge"),
                             ],
                           ),
-                          Icon(Icons.keyboard_arrow_right)
+                          const Icon(Icons.keyboard_arrow_right)
                         ],
                       ),
                       onPressed: () {},
@@ -740,5 +744,11 @@ class _ManagerWorkerDetailsScreenBodyState extends State<ManagerWorkerDetailsScr
         ),
       ),
     );
+  }
+
+  String getMaxDaysInCurrentMonth() {
+    final now = DateTime.now();
+    final lastDayOfMonth = DateTime(now.year, now.month + 1, 0);
+    return lastDayOfMonth.day.toString();
   }
 }

@@ -126,7 +126,7 @@ class ManagerOverviewWorkerScreenBody extends StatelessWidget {
                       trailing: RichText(
                         text: TextSpan(text: "23", style: themeData.textTheme.bodyText2?.copyWith(color: Colors.green, fontWeight: FontWeight.w500), children: [
                           TextSpan(
-                              text: "/" + state.workerEntities[index].preference != null ? "${state.workerEntities[index].maxWorkDays}" : maxDays,
+                              text: "/${state.workerEntities[index].maxWorkDays != null ? "${state.workerEntities[index].maxWorkDays}" : maxDays}",
                               style: themeData.textTheme.bodyText2),
                         ]),
                       ),

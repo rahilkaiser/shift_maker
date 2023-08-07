@@ -1,0 +1,8 @@
+{
+  "projects": {
+    "default": "shiftmaker-d0904",
+    "shiftmaker": "shiftmaker-d0904"
+  },
+  "targets": {},
+  "etags": {}
+}
