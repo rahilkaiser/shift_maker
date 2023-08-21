@@ -32,7 +32,7 @@ class ManagerOverviewDepartmentScreen extends StatelessWidget {
           );
         },
       ),
-      body: const ManagerOverviewDepartmentScreenBody(),
+      body: ManagerOverviewDepartmentScreenBody(),
     );
   }
 }

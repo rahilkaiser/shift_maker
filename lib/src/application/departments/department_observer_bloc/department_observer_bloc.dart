@@ -1,7 +1,7 @@
-import 'dart:async';
-
 import 'package:bloc/bloc.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dartz/dartz.dart';
+import 'package:infinite_scroll_pagination/infinite_scroll_pagination.dart';
 import 'package:meta/meta.dart';
 
 import '../../../core/util/failures/object_failures/department_failure.dart';
@@ -14,48 +14,61 @@ part 'department_observer_state.dart';
 
 class DepartmentObserverBloc extends Bloc<DepartmentObserverEvent, DepartmentObserverState> {
   final DepartmentRepository departmentRepository;
-
-  StreamSubscription<Either<DepartmentFailure, List<DepartmentEntity>>>? _streamSubscription;
+  final PagingController<int, DepartmentEntity> pagingController = PagingController(firstPageKey: 1);
 
   DepartmentObserverBloc({required this.departmentRepository}) : super(DepartmentObserverInitialState()) {
+
+
+     on<RefreshEvent>((event, emit) async {
+       pagingController.refresh();
+       emit(DepartmentObserverInitialState()); // or any other appropriate initial state
+       emit(DepartmentObserverLoadingState());
+       final failureOrDepart = await departmentRepository.getDepartments(1, null);
+       emit(
+         failureOrDepart.fold(
+           (failure) => DepartmentObserverFailureState(departmentFailure: failure),
+           (result) => DepartmentObserverPaginationState(
+             currentPage: 1,
+             departments: result.value1,
+             lastDoc: result.value2,
+           ),
+         ),
+       );
+     });
+
+
     on<ObserveAllEvent>((event, emit) async {
-      this.observeAllEvents(event, emit);
+      emit(DepartmentObserverLoadingState());
+      final failureOrDepart = await departmentRepository.getDepartments(1, null);
+      emit(
+        failureOrDepart.fold(
+          (failure) => DepartmentObserverFailureState(departmentFailure: failure),
+          (result) => DepartmentObserverPaginationState(
+            currentPage: 1,
+            departments: result.value1,
+            lastDoc: result.value2,
+          ),
+        ),
+      );
     });
 
-    on<DepartmentUpdatedEvent>((event, emit) async {
-      this.observeDepartmentUpdated(event, emit);
+    on<FetchNextPageEvent>((event, emit) async {
+      if (this.state is DepartmentObserverPaginationState) {
+        final currentState = this.state as DepartmentObserverPaginationState;
+        final nextPage = currentState.currentPage + 1;
+        final failureOrDepart = await departmentRepository.getDepartments(nextPage, currentState.lastDoc);
+        emit(
+          failureOrDepart.fold(
+            (failure) => DepartmentObserverFailureState(departmentFailure: failure),
+            (result) => DepartmentObserverPaginationState(
+              currentPage: nextPage,
+              departments: currentState.departments + result.value1,
+              lastDoc: result.value2,
+            ),
+          ),
+        );
+      }
     });
-  }
 
-  Future<void> observeAllEvents(ObserveAllEvent event, Emitter<DepartmentObserverState> emit) async {
-    emit(DepartmentObserverLoadingState());
-    await this._streamSubscription?.cancel();
-
-    this._streamSubscription = departmentRepository.watchAll().listen(
-      (failureOrDepart) {
-        print("SOMETHING CHANGED HERE THIS IS IT");
-        add(DepartmentUpdatedEvent(failureOrDepart: failureOrDepart));
-      },
-    );
-  }
-
-  void observeDepartmentUpdated(DepartmentUpdatedEvent event, Emitter<DepartmentObserverState> emit) {
-    event.failureOrDepart.fold(
-      (failure) => emit(DepartmentObserverFailureState(departmentFailure: failure)),
-      (departs) {
-        // List<DepartmentEntity> depTest = [];
-        // for (int i = 0; i < 10; i++) {
-        //   depTest.add(departs[0]);
-        // }
-        print(departs);
-        return emit(DepartmentObserverSuccessState(departmentEntities: departs));
-      },
-    );
-  }
-
-  @override
-  Future<void> close() async {
-    await this._streamSubscription?.cancel();
-    return super.close();
   }
 }

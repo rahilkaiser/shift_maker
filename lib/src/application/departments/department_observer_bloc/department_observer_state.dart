@@ -7,12 +7,17 @@ class DepartmentObserverInitialState extends DepartmentObserverState {}
 
 class DepartmentObserverLoadingState extends DepartmentObserverState {}
 
-class DepartmentObserverSuccessState extends DepartmentObserverState {
-  final List<DepartmentEntity> departmentEntities;
+class DepartmentObserverPaginationState extends DepartmentObserverState {
+  final List<DepartmentEntity> departments;
+  final int currentPage;
+  final DocumentSnapshot? lastDoc;
 
-  DepartmentObserverSuccessState({
-    required this.departmentEntities,
+  DepartmentObserverPaginationState({
+    required this.currentPage,
+    required this.departments,
+    required this.lastDoc,
   });
+
 }
 
 class DepartmentObserverFailureState extends DepartmentObserverState {

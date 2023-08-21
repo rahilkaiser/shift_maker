@@ -30,9 +30,11 @@ class DepartmentRepositoryImpl implements DepartmentRepository {
       final managerDocRef = await this.firestore.getCurrentUserDocument();
 
       for (var file in imageList) {
-        await this.firebaseStorage.ref('${managerDocRef.id}/departments/${departmentEntity.id.value}/${file.path.split("/").last}').putFile(
-              file,
-            );
+        await this.firebaseStorage.ref('${managerDocRef.id}/departments/${departmentEntity.id.value}/${file.path
+            .split("/")
+            .last}').putFile(
+          file,
+        );
       }
 
       ListResult result = await this.firebaseStorage.ref('${managerDocRef.id}/departments/${departmentEntity.id.value}').listAll();
@@ -62,9 +64,11 @@ class DepartmentRepositoryImpl implements DepartmentRepository {
       });
 
       for (var file in imageList) {
-        await this.firebaseStorage.ref('${managerDocRef.id}/departments/${departmentEntity.id.value}/${file.path.split("/").last}').putFile(
-              file,
-            );
+        await this.firebaseStorage.ref('${managerDocRef.id}/departments/${departmentEntity.id.value}/${file.path
+            .split("/")
+            .last}').putFile(
+          file,
+        );
       }
 
       ListResult result = await this.firebaseStorage.ref('${managerDocRef.id}/departments/${departmentEntity.id.value}').listAll();
@@ -107,29 +111,37 @@ class DepartmentRepositoryImpl implements DepartmentRepository {
     }
   }
 
-  @override
-  Stream<Either<DepartmentFailure, List<DepartmentEntity>>> watchAll() async* {
-    final userDocRef = await firestore.getCurrentUserDocument();
-    final currUserRole = await firestore.getCurrentUserRole();
+  Future<Either<DepartmentFailure, Tuple2<List<DepartmentEntity>, DocumentSnapshot?>>> getDepartments(int page, DocumentSnapshot? lastDoc) async {
+    try {
+      final userDocRef = await firestore.getCurrentUserDocument();
+      final currUserRole = await firestore.getCurrentUserRole();
 
-    var result = firestore.collection("departments").snapshots().map(
-      (snap) {
-        return right<DepartmentFailure, List<DepartmentEntity>>(
-          snap.docs
-              .map(
-                (doc) {
-                  if (currUserRole == UserRole.MANAGER && doc.data()['manager'].id == userDocRef.id) {
-                    return DepartmentModel.fromFireStore(doc).toEntity();
-                  }
-                },
-              )
-              .whereType<DepartmentEntity>()
-              .toList(),
-        );
-      },
-    )
-        //Error handling Left Side
-        .handleError((e) {
+      QuerySnapshot snapshot;
+      int documentsToRetrieve = 20;
+
+      if (page == 1 || lastDoc == null) {
+        snapshot = await firestore.collection("departments").limit(documentsToRetrieve).get();
+      } else {
+        snapshot = await firestore.collection("departments").startAfterDocument(lastDoc).limit(documentsToRetrieve).get();
+      }
+
+      final departments = snapshot.docs
+          .map((doc) {
+        final data = doc.data() as Map<String, dynamic>;
+        if (currUserRole == UserRole.MANAGER && data['manager']?.id == userDocRef.id) {
+          return DepartmentModel.fromFireStore(doc as QueryDocumentSnapshot<Map<String, dynamic>>).toEntity();
+        }
+        return null;
+      })
+          .where((item) => item != null)
+          .cast<DepartmentEntity>()
+          .toList();
+
+      DocumentSnapshot? lastDocument = snapshot.docs.isNotEmpty ? snapshot.docs.last : null;
+
+      return right(Tuple2(departments, lastDocument));
+    } catch (e) {
+      print(e);
       if (e is FirebaseException) {
         if (e.code.contains('permission-denied') || e.code.contains('PERMISSION_DENIED')) {
           return left(InsufficientPermissions());
@@ -138,8 +150,6 @@ class DepartmentRepositoryImpl implements DepartmentRepository {
       } else {
         return left(GeneralFailure());
       }
-    });
-
-    yield* result;
+    }
   }
 }
